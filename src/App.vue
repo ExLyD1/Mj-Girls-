@@ -1,30 +1,41 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <div class="bg-myBg flex w-full">
+    <div class="z-10 m-auto w-full">
+      <my-header></my-header>
+      <router-view></router-view>
+      <my-footer class="bg-myDark w-full"></my-footer>
+    </div>
+    <div class="parabol z-0"></div>
+  </div>
 </template>
 
+<script setup>
+import MyHeader from './components/generalComponents/MyHeader.vue';
+import MyFooter from './components/generalComponents/MyFooter.vue';
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+*{
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
 }
-
-nav {
-  padding: 30px;
+.parabol{
+  position: fixed;
+  background-image: url('@/assets/global/parabol_back.png');
+  opacity: 90%;
+  width:3225px;
+  height: 3202px;
+  top:32px;
+  border: 2px;
 }
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
+::-webkit-scrollbar {
+  background-color: #0E0E0E; /* Фон скроллбара */
+  width: 10px;
 }
-
-nav a.router-link-exact-active {
-  color: #42b983;
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* Цвет ползунка */
+  border-radius: 10px; /* Скругление */
+  border: 2px solid #555; /* Граница вокруг ползунка */
 }
 </style>
