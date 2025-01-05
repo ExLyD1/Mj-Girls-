@@ -12,19 +12,16 @@ export const useSlutStore = defineStore( 'slutStore', {
                 weight : 56,
                 boobs : 3,
                 hourPrices: [
-                    { price : 9000, id: 1 },
-                    { price : 17000, id: 2 },
-                    { price : 18000, id: 3 },
-                    { price : 19000, id: 4 },
-                    { price : 19999, id: 5 },
-                    { price : 20000, id: 6 },
+                    { price : 9000,  id: 1, comment: 'у меня'  },  // 1 час у меня
+                    { price : 20000, id: 2, comment: 'у меня'  },  // ночь у меня
+                    { price : 9001,  id: 3, comment: 'у тебя'  },  // 1 час у тебя
+                    { price : 20001, id: 4, comment: 'у тебя'  },  // ночь у тебя
                 ],
-                nightPrice: 28000,
                 additional:[
                     {
                         name: 'Секс',
                         options: [
-                            { name: 'sex1S', price: 15, comment: 'qwe', id: 1 },
+                            { name: 'sex1S', price: 0, comment: 'qwe', id: 1 },
                             { name: 'sex2S', price: 20, comment: 'zxc', id: 2 },
                             { name: 'sex3S', price: 25, comment: 'zxc', id: 3 },
                             { name: 'sex4S', price: 30, comment: 'zxc', id: 4 },
@@ -114,25 +111,36 @@ export const useSlutStore = defineStore( 'slutStore', {
         ]
     }),
     getters: {
-        getPrice: (state) => (id, paymentMethod, additionalListId) => {
+        getPrice: (state) => (id, paymentMethod, additionalListId, selectedPlace) => {
             let sum = 0
-            
-            
 
+
+            
+            // находим обьект шлюхи у нас с бд
             const slut = state.sluts.find((slut) => slut.id === id);
-            if (!slut) return 0;
+            // проверки ли нашли
+            if (!slut) return 0; 
             
-            for (let i = 0; i < slut.hourPrices.length; i++) {
-                const el = slut.hourPrices[i]
-                if ( paymentMethod  === el.id ) {
-                    sum += el.price
+
+
+            // добавление цены за выбраный час
+            if ( paymentMethod != 'night' ) {
+                if ( selectedPlace === 'model') {
+                    sum += slut.hourPrices[0].price * paymentMethod
+                } else {
+                    sum += slut.hourPrices[2].price * paymentMethod
                 }
+            } else { // добавление цены за ночь
+                if ( selectedPlace === 'model') {
+                    sum += slut.hourPrices[1].price
+                } else {
+                    sum += slut.hourPrices[3].price
+                }
+                
             }
 
-            if ( paymentMethod === 'night') {
-                sum += slut.nightPrice
-            }
 
+            // добавление цены за доп услуги
             for (let i = 0; i < slut.additional.length; i++) {
                 for (let j = 0; j < slut.additional[i].options.length; j++) {
                     const el = slut.additional[i].options
@@ -148,29 +156,3 @@ export const useSlutStore = defineStore( 'slutStore', {
         },
     },
 });
-
-
-// console.log(id);
-                // console.log('---');
-                // console.log(this.sluts[id]);
-                // console.log('end');
-                
-                
-                
-                // const slut = state.sluts[id];  // Используем первый элемент массива
-                // switch (option) {
-                // case '1hour':
-                //     return slut.hour1Price;
-                // case '2hours':
-                //     return slut.hour2Price;
-                // case '3hours':
-                //     return slut.hour3Price;
-                // case '4hours':
-                //     return slut.hour4Price;
-                // case '5hours':
-                //     return slut.hour5Price;
-                // case 'night':
-                //     return slut.nightPrice;
-                // default:
-                //     return 0;
-                // }

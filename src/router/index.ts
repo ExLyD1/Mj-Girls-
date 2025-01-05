@@ -14,26 +14,6 @@ const routes: Array<RouteRecordRaw> = [
     component: MJ_Landing
   },
   {
-    path: '/profile',
-    name: 'Profile',
-    component: MyProfile
-  },
-  {
-    path: '/favorite',
-    name: 'Favorite',
-    component: MyFavorite
-  },
-  {
-    path: '/changePass',
-    name: 'changePassword',
-    component: ChangePassword
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: MyLogin
-  },
-  {
     path: '/slutPage/:id',
     name: 'slutPage',
     component: SlutPage

@@ -33,6 +33,31 @@
             </option>
             <option value="night">ночь</option>
           </select>
+          <div class="w-full flex flex-row justify-around">
+            <div>
+              <label class="cursor-pointer"> 
+                <input
+                  type="radio"
+                  name="gender"
+                  value="model"
+                  v-model="selectedPlace"
+                  selected="true"
+                />
+                У модели
+              </label>
+            </div>
+            <div>
+              <label class="cursor-pointer">
+                <input
+                  type="radio"
+                  name="gender"
+                  value="client"
+                  v-model="selectedPlace"
+                />
+                У меня
+              </label>
+            </div>
+          </div>
         </div>
 
         
@@ -155,14 +180,14 @@
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/sun.png" alt=""></template>
                 <template #time>          <p>1 час</p>      </template>
                 <template #price_me>      <p class="text-sm">{{ model.hourPrices[0].price }} ₽</p>   </template>
-                <template #price_you>     <p class="text-sm">{{ model.hourPrices[0].price + 500 }} ₽</p>   </template>
+                <template #price_you>     <p class="text-sm">{{ model.hourPrices[2].price }} ₽</p>   </template>
               </my-tariff>
 
               <my-tariff class="bg-myRed">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/sun.png" alt=""></template>
-                <template #time>          <p>2 часа</p>      </template>
-                <template #price_me>      <p class="text-sm"> {{ model.hourPrices[1].price }} ₽</p>   </template>
-                <template #price_you>     <p class="text-sm"> {{ model.hourPrices[1].price + 1000 }} ₽</p>   </template>
+                <template #time>          <p>3 часа</p>      </template>
+                <template #price_me>      <p class="text-sm"> {{ ( model.hourPrices[0].price * 3 ) - ( model.hourPrices[0].price * 3 * 20 / 100 ) }} ₽</p>   </template>
+                <template #price_you>     <p class="text-sm"> {{ ( model.hourPrices[2].price * 3 ) - ( model.hourPrices[2].price * 3 * 20 / 100 ) }} ₽</p>   </template>
               </my-tariff>
             </div>
 
@@ -171,15 +196,15 @@
               <my-tariff class="bg-myLightDark">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/moon.png" alt=""></template>
                 <template #time>          <p>1 час</p>      </template>
-                <template #price_me>      <p class="text-myRed text-sm">{{ model.hourPrices[0].price + 1500 }} ₽</p>   </template>
-                <template #price_you>     <p class="text-myRed text-sm">{{ model.hourPrices[0].price + 2000 }} ₽</p>   </template>
+                <template #price_me>      <p class="text-myRed text-sm">{{ model.hourPrices[0].price }} ₽</p>   </template>
+                <template #price_you>     <p class="text-myRed text-sm">{{ model.hourPrices[0].price }} ₽</p>   </template>
               </my-tariff>
 
               <my-tariff class="bg-myLightDark">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/moon.png" alt=""></template>
                 <template #time>          <p>Ночь</p>      </template>
-                <template #price_me>      <p class="text-myRed text-sm">{{ model.nightPrice }} ₽</p>   </template>
-                <template #price_you>     <p class="text-myRed text-sm">{{ model.nightPrice + 1000 }} ₽</p>   </template>
+                <template #price_me>      <p class="text-myRed text-sm">{{ model.hourPrices[1].price }} ₽</p>   </template>
+                <template #price_you>     <p class="text-myRed text-sm">{{ model.hourPrices[1].price }} ₽</p>   </template>
               </my-tariff>
             </div>
 
@@ -195,7 +220,7 @@
 
       <div class="py-3 px-5 bg-myDark rounded-2xl w-870 rightPart">
         <div class="flex flex-row justify-between w-full mb-3">
-          <h1 class="text-2xl">{{ model.name }}</h1>
+          <h1 @click="api_req" class="text-2xl">{{ model.name }}</h1>
           <div class="bg-myLightDark rounded-lg p-2">
             <img class="h-7 w-7" src="@/assets/landing/favorite_False.png" alt="">
           </div>
@@ -248,7 +273,7 @@
                   <img src="@/assets/slutPage/check.png" alt="Check" class="mr-2">
                   <p>{{ option.name }}</p>
                 </div>
-                <p class="text-myRed ml-6">{{ option.comment }}</p>
+                <p class="text-myRed ml-6">{{ option.comment }}<span v-if="option.price != 0">, {{ option.price }}₽ </span></p>
               </li>
             </ul>
           </div>
@@ -342,38 +367,38 @@
       <div class="p-3 rounded-xl bg-myDark">
         <div>
           <h1 class="text-white text-4xl">ТАРИФ</h1>
-          <div class="flex flex-col gap-3">
+          <div class="flex flex-col gap-3"> 
             <h1 class="text-white text-xl mt-5">День</h1>
             <div class="flex flex-row gap-3 text-white">
-              <my-tariff class="bg-myRed tariffCard">
+              <my-tariff class="bg-myRed">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/sun.png" alt=""></template>
                 <template #time>          <p>1 час</p>      </template>
-                <template #price_me>      <p class="text-sm">{{ model.hour1Price }} ₽</p>   </template>
-                <template #price_you>     <p class="text-sm">{{ model.hour1Price + 500 }} ₽</p>   </template>
+                <template #price_me>      <p class="text-sm">{{ model.hourPrices[0].price }} ₽</p>   </template>
+                <template #price_you>     <p class="text-sm">{{ model.hourPrices[2].price }} ₽</p>   </template>
               </my-tariff>
 
-              <my-tariff class="bg-myRed tariffCard">
+              <my-tariff class="bg-myRed">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/sun.png" alt=""></template>
-                <template #time>          <p>2 часа</p>      </template>
-                <template #price_me>      <p class="text-sm">{{ model.hour2Price }} ₽</p>   </template>
-                <template #price_you>     <p class="text-sm">{{ model.hour2Price + 1000 }} ₽</p>   </template>
+                <template #time>          <p>3 часа</p>      </template>
+                <template #price_me>      <p class="text-sm"> {{ ( model.hourPrices[0].price * 3 ) - ( model.hourPrices[0].price * 3 * 20 / 100 ) }} ₽</p>   </template>
+                <template #price_you>     <p class="text-sm"> {{ ( model.hourPrices[2].price * 3 ) - ( model.hourPrices[2].price * 3 * 20 / 100 ) }} ₽</p>   </template>
               </my-tariff>
             </div>
 
             <h1 class="text-white text-xl">Ночь</h1>
             <div class="flex flex-row gap-3 text-white">
-              <my-tariff class="bg-myLightDark tariffCard">
+              <my-tariff class="bg-myLightDark">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/moon.png" alt=""></template>
-                <template #time>          <p>1 Час</p>      </template>
-                <template #price_me>      <p class="text-myRed text-sm">{{ model.hour1Price + 1500 }} ₽</p>   </template>
-                <template #price_you>     <p class="text-myRed text-sm"> {{ model.hour1Price + 2000 }} ₽</p>   </template>
+                <template #time>          <p>1 час</p>      </template>
+                <template #price_me>      <p class="text-myRed text-sm">{{ model.hourPrices[0].price }} ₽</p>   </template>
+                <template #price_you>     <p class="text-myRed text-sm">{{ model.hourPrices[0].price }} ₽</p>   </template>
               </my-tariff>
 
-              <my-tariff class="bg-myLightDark tariffCard">
+              <my-tariff class="bg-myLightDark">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/moon.png" alt=""></template>
                 <template #time>          <p>Ночь</p>      </template>
-                <template #price_me>      <p class="text-myRed text-sm">{{ model.nightPrice }} ₽</p>   </template>
-                <template #price_you>     <p class="text-myRed text-sm">{{ model.nightPrice + 1000 }} ₽</p>   </template>
+                <template #price_me>      <p class="text-myRed text-sm">{{ model.hourPrices[1].price }} ₽</p>   </template>
+                <template #price_you>     <p class="text-myRed text-sm">{{ model.hourPrices[1].price }} ₽</p>   </template>
               </my-tariff>
             </div>
 
@@ -393,7 +418,7 @@
                   <img src="@/assets/slutPage/check.png" alt="Check" class="mr-2">
                   <p>{{ option.name }}</p>
                 </div>
-                <p class="text-myRed ml-6">{{ option.comment }}</p>
+                <p class="text-myRed ml-6">{{ option.comment }}, {{ option.price }}</p>
               </li>
             </ul>
           </div>
@@ -420,6 +445,25 @@ const slutStore = useSlutStore()
 
 
 
+
+
+
+
+
+const api_req = async () => {
+  await fetch('http://localhost:3000/api/message')
+    .then(response => response.json())
+    .then(data => console.log(data))
+}
+
+
+
+
+
+
+
+
+
 const model = computed(() => {
   return slutStore.sluts.find(m => m.id === route.params.id);
 });
@@ -433,7 +477,7 @@ const hoursList = ref([
 ])
 
 const selectedOptionPayment = ref(0)
-
+const selectedPlace = ref("model"); // По умолчанию ничего не выбрано
 
 const selectedAdditionalSex = ref(0)
 const selectedAdditionalMassage = ref(0)
@@ -455,7 +499,8 @@ const logSelection = () => {
 
 const total_price = computed(() => {
   
-  return slutStore.getPrice(model.value.id, selectedOptionPayment.value, additionalValues.value); 
+  return slutStore.getPrice(model.value.id, selectedOptionPayment.value, additionalValues.value, selectedPlace.value); 
+
 });
 
 
