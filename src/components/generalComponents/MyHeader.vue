@@ -10,8 +10,17 @@
     <div class="flex flex-col gap-2 rounded-xl header_input">
       <div class="bg-myDark rounded-xl flex flex-row items-center gap-4 py-3 px-4 h-12 input">
         <img src="@/assets/header/search.svg" alt="">
-        <input class="outline-none bg-myDark" type="text" placeholder="Search">
+        <input 
+        class="outline-none bg-myDark" 
+        type="text" 
+        placeholder="Search"
+        v-model="searchQuery"
+        @input="handleSearch"
+        @keydown.enter="foundModel" 
+      >
       </div>
+
+      <p v-if="searchQuery.trim() !== ''">Пользователь не найден</p>
 
       
 
@@ -204,6 +213,40 @@
 </template>
 
 <script setup>
+
+const searchQuery = ref('');
+const result = ref(null);
+
+const handleSearch = async () => {
+
+  
+
+  if (searchQuery.value.trim() === '') {
+    result.value = null;
+    return;
+  }
+
+  try {
+    const response = await fetch(`http://localhost:3000/api/search?id=${searchQuery.value}`);
+    if (response.ok) {
+      result.value = await response.json();
+    } else {
+      result.value = null;
+    }
+  } catch (error) {
+    console.error('Ошибка при поиске:', error);
+  }
+  
+};
+
+
+const foundModel = () => {
+  // Переход на страницу по нужному пути
+  // router.push(`/slutPage/${result.value.data._id}`)  // Замените на нужный путь
+  router.push(`/slutPage/${1}`)
+}
+
+
 
 // Импорты
 

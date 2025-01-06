@@ -4,7 +4,7 @@
     <div class="container_landing text-white mt-5 w-full">
       <h1 class=" text-4xl flex justify-center">НАШИ МОДЕЛИ</h1>
       <div class="slut_wrapper flex flex-row justify-center flex-wrap mt-8 gap-5 mb-8">
-        <slut-card
+        <!-- <slut-card
           v-for="slut in slutStore.sluts"
           :key="slut.id"
           :slut="slut"
@@ -25,19 +25,47 @@
           <template #category3>{{ slut.category3 }}</template>
           <template #category4>{{ slut.category4 }}</template>
         
-        </slut-card>
+        </slut-card> -->
+
+        Введите ID
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import MyPKH from '@/components/landing/MyPKH.vue';
 import SlutCard from '@/components/generalComponents/SlutCard.vue';
 import { useSlutStore } from '@/stores/SlutStore.js';
 
 const slutStore = useSlutStore();
+
+
+
+console.log(slutStore.sluts);
+
+onMounted(() => {
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/search?id=1004');
+      const data = await response.json();
+
+      console.log('Data:', data); // Убедитесь, что данные есть
+
+      // Обновляем данные в Pinia
+      await slutStore.setData(data);
+      console.log('Updated store:', slutStore.sluts); // Проверим обновление данных в хранилище
+      return data
+    } catch (error) {
+      console.error('Ошибка при получении данных:', error);
+    }
+  }
+  fetchData()
+  console.log();
+  
+  
+});
 </script>
 
 <style scoped>

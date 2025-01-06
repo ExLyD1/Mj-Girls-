@@ -1,6 +1,7 @@
 <template>
   <div class="bg-myBg flex w-full">
     <div class="z-10 m-auto w-full">
+      <!-- h-[100vh] flex flex-col justify-between" -->
       <my-header></my-header>
       <router-view></router-view>
       <my-footer class="bg-myDark w-full"></my-footer>

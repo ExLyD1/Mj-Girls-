@@ -305,7 +305,7 @@
 
     <div class="flex flex-col gap-5 w-295 aside">
       <div class="w-full">
-        <img class="rounded-2xl" :src="model.link" alt="">
+        <my-swiper :model="model"></my-swiper>
       </div>
 
       <div @click="openModalReg" class="flex flex-row items-center justify-center gap-2 bg-myRed rounded-2xl py-3 px-4 text-white cursor-pointer">
