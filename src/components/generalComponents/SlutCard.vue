@@ -50,7 +50,7 @@
 
 
 
-    <div class="flex flex-row w-full gap-3 text-sm categories_holder">
+    <!-- <div class="flex flex-row w-full gap-3 text-sm categories_holder">
       <div class="bg-myLightDark rounded-xl catagories">
         <slot name="category1"></slot>
       </div>
@@ -63,11 +63,11 @@
       <div class="bg-myGreen rounded-xl catagories">
         <slot name="category4"></slot>
       </div>
-    </div>
+    </div> -->
 
 
 
-    <div @click="goToProfile(slut.id)" class="bg-myRed w-full flex items-center justify-center text-center rounded-lg h-12 p-2 cursor-pointer">Полная Анкета</div>
+    <div @click="goToProfile(slut.data._id)" class="bg-myRed w-full flex items-center justify-center text-center rounded-lg h-12 p-2 cursor-pointer">Полная Анкета</div>
 
   </div>
 </template>

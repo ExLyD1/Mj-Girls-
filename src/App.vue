@@ -13,6 +13,17 @@
 <script setup>
 import MyHeader from './components/generalComponents/MyHeader.vue';
 import MyFooter from './components/generalComponents/MyFooter.vue';
+
+
+import { ref, onMounted } from 'vue'
+import { useSlutStore } from '@/stores/SlutStore.js';
+
+const slutStore = useSlutStore();
+
+
+onMounted(async () => {
+  await slutStore.fetchSluts(); // Загружаем данные при монтировании компонента
+});
 </script>
 
 <style>

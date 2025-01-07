@@ -9,14 +9,9 @@
     loop="True"
     class="w-295"
   >
-    <!-- <swiper-slide><img class="w-295 rounded-2xl" :src="model.link" alt=""></swiper-slide>
-    <swiper-slide><img class="w-295 rounded-2xl" :src="model.link1" alt=""></swiper-slide>
-    <swiper-slide><img class="w-295 rounded-2xl" :src="model.link2" alt=""></swiper-slide>
-    <swiper-slide><img class="w-295 rounded-2xl" :src="model.link3" alt=""></swiper-slide> -->
 
-    <swiper-slide v-for="(link, index) in model.photo_links" :key="index" class="w-[295px] h-[300px] overflow-hidden">
+    <swiper-slide v-for="(link, index) in model.data.photo_links" :key="index" class="w-[295px] h-[300px] overflow-hidden">
       <img class="w-full h-full object-cover rounded-2xl" :src="link" alt="">
-      <!-- w-295 -->
     </swiper-slide>
   </swiper>
 
@@ -29,12 +24,8 @@
     class="w-295 mt-4"
     
   >
-    <!-- <swiper-slide><img class="w-16 rounded-lg cursor-pointer" :src="model.link" alt=""></swiper-slide>
-    <swiper-slide><img class="w-16 rounded-lg cursor-pointer" :src="model.link1" alt=""></swiper-slide>
-    <swiper-slide><img class="w-16 rounded-lg cursor-pointer" :src="model.link2" alt=""></swiper-slide>
-    <swiper-slide><img class="w-16 rounded-lg cursor-pointer" :src="model.link3" alt=""></swiper-slide> -->
 
-    <swiper-slide v-for="(link, index) in model.photo_links" :key="index" class="w-[65px] h-[65px] overflow-hidden">
+    <swiper-slide v-for="(link, index) in model.data.photo_links" :key="index" class="w-[65px] h-[65px] overflow-hidden">
       <img class="w-full h-full object-cover rounded-lg cursor-pointer " :src="link" alt="">
     </swiper-slide>
   </swiper>
