@@ -13,8 +13,17 @@
     class="flex flex-col gap-3 bg-myLightDark rounded-3xl w-full p-5 shadow-2xl pb-12"
   >
     <div class="flex flex-row justify-between w-full">
-      <div v-if="!isSuccess" class="text-white text-3xl">Оплата</div>
-      <div v-else class="text-white text-3xl">Успешно</div>
+      <div v-if="!isSuccess" class="text-white text-3xl flex flex-row">
+        <p v-if="!isTimeSelected">Оплата</p>
+        <p v-else class="mr-2">Оплатить в течении:</p>
+        <div v-if="isTimeSelected" class="flex flex-row gap-1">
+          {{ minutes }} {{ seconds }}
+        </div>
+      </div>
+      <div v-else class="text-white text-3xl">
+        <div v-if="moreThirty">Оплата</div>
+        <div v-else>Отправьте квитанцию об оплате</div>
+      </div>
 
       <div class="h-11 rounded-xl cursor-pointer" @click="closeModalReg">
         <img @click="reset" class="w-11 h-11" src="@/assets/header/close.png" alt="Cancel">
@@ -22,6 +31,10 @@
     </div>
 
 
+
+
+
+    <!-- Тут Отображаем цену и выбираем опции -->
     <div v-if="!isTimeSelected" class="firstBlockContainer flex flex-col w-full justify-center items-center">
       <div  class="flex flex-row justify-between gap-5 mt-5 w-3/4 m-auto timeBlock">
 
@@ -78,16 +91,15 @@
               <div class="flex flex-col gap-1 text-white w-52">
                 <div> {{ category.name }}</div>
                 <select 
-                  v-model="additionalService[index].value" 
-                  @change="logSelection(index)" 
+                  @change="updateAdditionalValues(index, $event.target.value)"  
                   class="outline-none cursor-pointer bg-myLightDark2 px-2 py-3 rounded-lg"
                 >
 
-                  <option :value="0" selected>Нет</option>
+                  <option value="" selected>Нет</option>
                   <option 
                     v-for="(option, idx) in category.options"
                     :key="idx"
-                    :value="idx + 1"
+                    :value="option.name"
                   >
                     {{ option.name }}
                   </option>
@@ -98,10 +110,10 @@
 
           </div>
           <div class="flex flex-col justify-end">
-
+            
             <div class="bg-myRed text-white text-lg rounded-xl text-center px-5 py-4 h-12 w-52 flex items-center justify-center mt-7 cursor-pointer">К оплате: {{ total_price }} RUB</div> 
 
-            <div @click="selectTime" class="bg-myRed text-white text-xl rounded-xl text-center px-5 py-4 h-12 w-52 flex items-center justify-center mt-7 cursor-pointer">Далее</div> 
+            <div @click="getCardNumber" class="bg-myRed text-white text-xl rounded-xl text-center px-5 py-4 h-12 w-52 flex items-center justify-center mt-7 cursor-pointer">Далее</div> 
             
           </div>
         </div>
@@ -110,12 +122,15 @@
       
     </div>
 
+
+
+    <!-- Показ карты для опплаты -->
     <div v-if="isTimeSelected && !isSuccess" class="flex flex-col items-center mt-5 w-3/4 m-auto">
 
       <div class="flex flex-col gap-2 text-white w-3/4 cardNum">
         <div>Номер карты</div>
         <div class="flex flex-row items-center border border-white rounded-xl px-3">
-          <div ref="cardNumber" class="w-3/4 py-2 text-center">4111 1444 6000 7858</div>
+          <div ref="cardNumber" class="w-3/4 py-2 text-center"> {{ card }} </div>
           <div class="border-l border-white w-1/4 pl-9 py-2">
             <img @click="copyCard" class="w-7 h-7 cursor-pointer" src="@/assets/slutPage/copy.png" alt="">
             <div v-if="copySuccess" class="absolute textCopied">Скопировано!</div>
@@ -135,11 +150,61 @@
 
 
 
-    <div v-if="isSuccess" class="flex flex-col items-center m-auto text-center">
+
+    <!-- Успешно оформили и можно идти в телеграм -->
+    <div v-if="isSuccess && !moreThirty" class="flex flex-col items-center m-auto text-center">
 
       <div class="flex flex-col gap-2 text-white w-3/4">
-        <div class="text-4xl font-medium pb-4">#40014</div>
-        <div>Вы успешно оформили заказ! Пожалуйста, напишите в поддержку для уточнения информации.</div>
+        <div class="text-2xl font-medium pb-2 pt-10">Номер заказа: 57649</div>
+        <div class="text-2xl font-medium pb-4">Код модели: {{ model.data._id }}</div>
+
+
+        <div class="flex flex-col gap-6 mt-6 w-full">
+          <div class="text-white text-lg">
+            Пожалуйста, прикрепите PDF-файл со скриншотом или квитанцией ниже. После этого свяжитесь с техподдержкой для согласования встречи.
+          </div>
+          
+          <!-- Кастомная кнопка для загрузки -->
+          <div class="flex justify-center w-full">
+            <label for="file-upload" class="cursor-pointer bg-myLightDark2 text-white text-lg px-6 py-3 rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-myRed w-3/4 md:w-1/2 text-center">
+              Прикрепить файл
+              <!-- Скрытый input -->
+              <input 
+                id="file-upload"
+                type="file" 
+                accept="application/pdf, image/*" 
+                class="hidden"
+                @change="handleFileUpload"
+              />
+            </label>
+          </div>
+          
+          <!-- Отображение имени файла, если он выбран -->
+          <div v-if="selectedFile" class="mt-4 text-white text-lg">
+            Выбран файл: <span class="font-semibold">{{ selectedFile.name }}</span>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div 
+        @click="openTelegram" 
+        class="bg-myRed cardNum2 text-white text-xl rounded-3xl text-center px-5 py-4 h-12 w-3/4 flex items-center justify-center mt-7 cursor-pointer gap-4"
+      >
+        <img src="@/assets/footer/telegram.png" alt="">
+        Написать в Телеграм
+      </div>
+      
+    </div>
+
+
+    <!-- Больше 30к модалка -->
+    <div v-if="isSuccess && moreThirty" class="flex flex-col items-center m-auto text-center">
+
+      <div class="flex flex-col gap-2 text-white w-3/4">
+        <div class="text-4xl font-medium pb-4">Свяжитесь с поддержкой в Telegram.</div>
+        <div>Сумма к оплате больше 30 тыс. руб. Пожалуйста, обратитесь в поддержку для оформления заказа!</div>
       </div>
 
       <div 
@@ -152,6 +217,10 @@
       
     </div>
       
+
+
+
+
   </div>
 
 
@@ -436,47 +505,49 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watchEffect, watch   } from 'vue';
 import MyTariff from '@/components/slutPage/MyTariff.vue'
 import MySwiper from '@/components/slutPage/MySwiper.vue';
 import { useRoute } from 'vue-router';
 import { useSlutStore } from '../stores/SlutStore';
+import axios from 'axios';
+
 
 const route = useRoute(); 
 const slutStore = useSlutStore()
 
 
+// ================================================
+// Время
+// ================================================
+const time = ref(15 * 60);  
+const minutes = ref(15);     
+const seconds = ref(0); 
 
 
 
-// Загружаем данные при монтировании компонента
-onMounted(async () => {
-  if (slutStore.sluts.length === 0) {
-    await slutStore.fetchSluts();
-  }
-});
-
-// Преобразуем route.params.id в строку и ищем объект с совпадающим _id
-const model = computed(() => {
-  const id = String(route.params.id); // Преобразуем в строку для корректного сравнения
-  const foundModel = slutStore.sluts.find(slut => String(slut.data._id) === id); // Преобразуем _id в строку
-  console.log('Найденный объект:', foundModel); // Логируем найденный объект
-  return foundModel;
-});
+// ================================================
+// Копирование
+// ================================================
+const cardNumber = ref(null);
+const copySuccess = ref(false);
 
 
-
-
+// ================================================
+// Логика отпкрия модалок
+// ================================================
+const card = ref( null )
+const moreThirty = ref(false)
+const isModalRegVisible = ref(false)
+const isSuccess = ref(false);
+const isPaid = ref(false);
+const isTimeSelected = ref(false)
 
 
 
-
-
-
-
-
-
-
+// ================================================
+// ШЛАК
+// ================================================
 const hoursList = ref([
   '1 час',
   '2 часа',
@@ -484,55 +555,138 @@ const hoursList = ref([
   '4 часа',
   '5 часов',
 ])
+const telegramLinkWeb = 'https://t.me/ExLyD1'; 
 
+const selectedFile = ref(null)
+
+
+// ================================================
+// Высчитывание цены
+// ================================================
 const selectedOptionPayment = ref(0)
-const selectedPlace = ref("model"); // По умолчанию ничего не выбрано
-
-const selectedAdditionalSex = ref(0)
-const selectedAdditionalMassage = ref(0)
-const selectedAdditionalStriptease = ref(0)
-
-
-const additionalValues = ref([ 0, 0, 0 ])
-const additionalService = ref([
-  selectedAdditionalSex,
-  selectedAdditionalMassage,
-  selectedAdditionalStriptease,
-])
-
-const logSelection = () => {
-  additionalValues.value = additionalService.value.map(item => item.value);
-};
+const selectedPlace = ref("model");
+const additionalValues = ref(['', '', '']);
 
 
 
-const total_price = computed(() => {
+// ================================================
+// Находим модель
+// ================================================
+const model = computed(() => {
+  const id = String(route.params.id); 
+  const foundModel = slutStore.sluts.find(slut => String(slut.data._id) === id); 
   
-  return slutStore.getPrice(model.value.data._id, selectedOptionPayment.value, additionalValues.value, selectedPlace.value); 
-
+  return foundModel;
 });
 
 
 
-const isModalRegVisible = ref(false)
+// ================================================
+// Проверки ли успешно
+// ================================================
+const checkIsSuccess = () => {
+  isSuccess.value = true
+};
 
+// ================================================
+// Сбрасывание 
+// ================================================
+const reset = () => {
+  
+  
+  if ( total_price.value >= 30000) {
+    moreThirty.value = false
+    isSuccess.value = false
+    isTimeSelected.value = false
+    total_price.value = 0
+    selectedOptionPayment.value = ''
+    additionalValues.value = ['', '', '']
+    return
+    
+  }
+  if ( card.value ) {
+    return isTimeSelected.value = true;
+  }
+  isSuccess.value = false;
+  isTimeSelected.value = false;
+};
+
+
+// ================================================
+// Высчитываем цену и прочее
+// ================================================
+const updateAdditionalValues = (index, value) => {
+  additionalValues.value[index] = value; 
+};
+const total_price = computed(() => {
+  return slutStore.getPrice(model.value.data._id, selectedOptionPayment.value, additionalValues.value, selectedPlace.value); 
+});
+
+
+
+
+
+// ================================================
+// Открываем закрываем модалку
+// ================================================
 const openModalReg = () => {
   isModalRegVisible.value = true;
 };
 const closeModalReg = () => {
   isModalRegVisible.value = false;
 };
-const isPaid = ref(false);
 
-const isTimeSelected = ref(false)
 
-const selectTime = () => {
-  isTimeSelected.value = true
+
+// ================================================
+// Таймер
+// ================================================
+const startTimer = () => {
+  const interval = setInterval(() => {
+    if (time.value > 0) {
+      time.value -= 1;  // Уменьшаем на 1 секунду
+      minutes.value = Math.floor(time.value / 60);  // Пересчитываем минуты
+      seconds.value = time.value % 60;  // Пересчитываем секунды
+    } else {
+      clearInterval(interval);  // Останавливаем таймер, когда время равно 0
+    }
+  }, 1000);  // Таймер обновляется каждую секунду (1000 миллисекунд)
 };
 
-const cardNumber = ref(null);
-const copySuccess = ref(false);
 
+
+
+
+// ================================================
+// Получаем данные об карте
+// ================================================
+const getCardNumber = async() => {
+  if ( total_price.value == 0) {
+    return
+  }
+  if ( total_price.value >= 30000 ) {
+    isSuccess.value = true
+    moreThirty.value = true
+  }
+  isTimeSelected.value = true
+
+  const response = await axios.get(`http://localhost:3000/api/cards`)
+  const data = response.data
+
+  startTimer()
+
+  for (let i = 0; i < data.length; i++) {
+    const el = data[i];
+    if ( el.FORBOT != 0 ) {
+      return card.value = el.Card
+    }
+  }
+}
+
+
+// ================================================
+// Копировать карту
+// ================================================
 const copyCard = async () => {
   const card = cardNumber.value.textContent;
   try {
@@ -545,18 +699,29 @@ const copyCard = async () => {
     console.error('Ошибка при копировании текста: ', error);
   }
 };
-const isSuccess = ref(false);
-const checkIsSuccess = () => {
-  isSuccess.value = true
+
+// ================================================
+// Загрузить файл пдф
+// ================================================
+
+const handleFileUpload = async (event) => {
+  const file = event.target.files[0];
+  
+  if (file) {
+    selectedFile.value = file;
+    
+    // Создаем FormData для отправки файла
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    slutStore.fetchUpload(formData)
+  }
 };
 
-const reset = () => {
-  isSuccess.value = false;
-  isTimeSelected. value = false;
-};
 
-const telegramLinkWeb = 'https://t.me/ExLyD1'; 
-
+// ================================================
+// Опен телеграм
+// ================================================
 const openTelegram = () => {
   window.location.href = telegramLinkWeb;
 };

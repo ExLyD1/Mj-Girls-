@@ -20,7 +20,7 @@
       >
       </div>
 
-      <p v-if="searchQuery.trim() !== ''">Пользователь не найден</p>
+      <!-- <p v-if="searchQuery.trim() !== ''">Пользователь не найден</p> -->
 
       
 
@@ -213,36 +213,29 @@
 </template>
 
 <script setup>
+import { useSlutStore } from '@/stores/SlutStore.js';
+import { watch, ref, onMounted  } from 'vue'
+import { useRouter, useRoute } from 'vue-router';
+const slutStore = useSlutStore();
+
+
 
 const searchQuery = ref('');
-const result = ref(null);
 
-// const handleSearch = async () => {
+// Используем watch для отслеживания изменений searchQuery
+watch(searchQuery, (newValue) => {
+  slutStore.id = newValue;  // Обновляем slutStore.id при изменении searchQuery
+});
 
-  
 
-//   if (searchQuery.value.trim() === '') {
-//     result.value = null;
-//     return;
-//   }
 
-//   try {
-//     const response = await fetch(`http://localhost:3000/api/search?id=${searchQuery.value}`);
-//     if (response.ok) {
-//       result.value = await response.json();
-//     } else {
-//       result.value = null;
-//     }
-//   } catch (error) {
-//     console.error('Ошибка при поиске:', error);
-//   }
-  
-// };
+
 
 
 const foundModel = () => {
   // Переход на страницу по нужному пути
   // router.push(`/slutPage/${result.value.data._id}`)  // Замените на нужный путь
+  slutStore.fetchSluts()
   router.push(`/slutPage/${searchQuery.value}`)
 }
 
@@ -250,8 +243,7 @@ const foundModel = () => {
 
 // Импорты
 
-import { ref, onMounted} from 'vue'
-import { useRouter, useRoute } from 'vue-router';
+
 
 // =========================================================
 // Константы для видимости блоков

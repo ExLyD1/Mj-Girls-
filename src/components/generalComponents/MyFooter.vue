@@ -5,7 +5,7 @@
       <div class="flex flex-col gap-5 w-300 first_part_footer">
         <div>
           <img src="@/assets/global/logo.png" alt="">
-          <p class="text-xs pt-2 blabla">Бла бла бла Бла бла бла Бла бла бла Бла бла бла Бла бла бла Бла бла бла Бла бла бла вся хуйня</p>
+          <p class="text-xs pt-2 blabla">ООО "Модельное Агентство "Модус"</p>
         </div>
         <div class="text-white font-medium">
           <p>Оформить заказ</p>

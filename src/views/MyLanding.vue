@@ -2,7 +2,7 @@
   <div class="m-auto w-1240 full_landing flex flex-col justify-center">
     <my-PKH class="pkhComp"></my-PKH>
     <div class="container_landing text-white mt-5 w-full">
-      <h1 class=" text-4xl flex justify-center">НАШИ МОДЕЛИ</h1>
+      <!-- <h1 class=" text-4xl flex justify-center">НАШИ МОДЕЛИ</h1>
       
     
       
@@ -30,7 +30,7 @@
         
         </slut-card>
 
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

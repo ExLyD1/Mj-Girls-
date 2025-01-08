@@ -1,6 +1,6 @@
 <template>
   <div class="bg-myBg flex w-full">
-    <div class="z-10 m-auto w-full">
+    <div class="z-10 m-auto w-full min-h-screen flex flex-col justify-between">
       <!-- h-[100vh] flex flex-col justify-between" -->
       <my-header></my-header>
       <router-view></router-view>
@@ -13,16 +13,30 @@
 <script setup>
 import MyHeader from './components/generalComponents/MyHeader.vue';
 import MyFooter from './components/generalComponents/MyFooter.vue';
-
-
-import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router';
+import { watch, onMounted } from 'vue';
 import { useSlutStore } from '@/stores/SlutStore.js';
 
-const slutStore = useSlutStore();
+const route = useRoute();  // Получаем текущий маршрут
+const slutStore = useSlutStore();  // Получаем доступ к хранилищу
 
 
-onMounted(async () => {
-  await slutStore.fetchSluts(); // Загружаем данные при монтировании компонента
+
+
+
+onMounted(() => {
+  
+  // Следим за изменением параметра id в маршруте
+  watch(() => route.params.id, async (newId) => {
+    if (newId) {
+      slutStore.setId(newId);  // Обновляем хранилище с параметром id
+      
+      
+      // После обновления id отправляем запрос
+      await slutStore.fetchSluts();
+      
+    }
+  });
 });
 </script>
 
