@@ -11,16 +11,13 @@
       <div class="bg-myDark rounded-xl flex flex-row items-center gap-4 py-3 px-4 h-12 input">
         <img src="@/assets/header/search.svg" alt="">
         <input 
-        class="outline-none bg-myDark" 
-        type="text" 
+        class="outline-none bg-myDark no-spinner w-full" 
+        type="number"
         placeholder="Search"
         v-model="searchQuery"
-        @input="handleSearch"
         @keydown.enter="foundModel" 
       >
       </div>
-
-      <!-- <p v-if="searchQuery.trim() !== ''">Пользователь не найден</p> -->
 
       
 
@@ -55,7 +52,13 @@
       </div>
 
       <div v-if="isMobileViewSearch & isSearchVisible" :class="{'activeSearch': isSearchVisible && isMobileViewSearch, 'inputField': true, }" class="flex justify-between">
-        <input type="text" placeholder="Поиск по номеру">
+        <input 
+          class="text-white no-spinner"
+          type="number" 
+          placeholder="Поиск по номеру"
+          v-model="searchQuery"
+          @keydown.enter="foundModel" 
+        >
         <p class="mr-2" @click="closeSearch" v-if="isMobileViewSearch & isSearchVisible">✕</p>
       </div>
 
@@ -159,10 +162,10 @@
       Если у вас есть какие-то вопросы или же есть нерешенные проблемы, сообщите нам об этом прямо в нашем телеграм боте!
     </div>
 
-    <div @click="openTelegram"  class="bg-myRed rounded-xl text-white flex items-center justify-center px-10 py-3 gap-4 w-52 mt-4 cursor-pointer">
+    <a href="https://t.me/MajesticGirlsSupport_Bot" class="bg-myRed rounded-xl text-white flex items-center justify-center px-10 py-3 gap-4 w-52 mt-4 cursor-pointer">
       <img src="@/assets/footer/telegram.png" alt="">
       <p>Телеграм</p>
-    </div>
+    </a>
 
       
   </div>
@@ -201,10 +204,10 @@
       </div>
     </div> -->
 
-    <div @click="openTelegram"  class="bg-myRed rounded-xl text-white flex items-center justify-center px-10 py-3 gap-4 w-52 mt-4 cursor-pointer">
+    <a href="https://t.me/MajesticGirlsSupport_Bot"  class="bg-myRed rounded-xl text-white flex items-center justify-center px-10 py-3 gap-4 w-52 mt-4 cursor-pointer">
       <img src="@/assets/footer/telegram.png" alt="">
       <p>Телеграм</p>
-    </div>
+    </a>
 
       
   </div>
@@ -222,21 +225,15 @@ const slutStore = useSlutStore();
 
 const searchQuery = ref('');
 
-// Используем watch для отслеживания изменений searchQuery
 watch(searchQuery, (newValue) => {
-  slutStore.id = newValue;  // Обновляем slutStore.id при изменении searchQuery
+  slutStore.id = newValue; 
 });
 
-
-
-
-
-
-const foundModel = () => {
-  // Переход на страницу по нужному пути
-  // router.push(`/slutPage/${result.value.data._id}`)  // Замените на нужный путь
-  slutStore.fetchSluts()
-  router.push(`/slutPage/${searchQuery.value}`)
+const foundModel = async () => {
+  if (!slutStore.isFetching) { // Проверяем флаг в хранилище
+    await slutStore.fetchSlutsByInput(searchQuery.value);
+    router.push(`/slutPage/${searchQuery.value}`)
+  }
 }
 
 
@@ -339,7 +336,6 @@ const activePath = ref('');
 
 
 function navigateAndReload(path) {
-  console.log(path);
   
   sessionStorage.setItem('activePath', path);
   router.push(path)
@@ -489,7 +485,27 @@ const closeModalVacancy = () => {
   }
 }
 
+/* Для Webkit браузеров (Chrome, Safari) */
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
+/* Для Firefox */
+.no-spinner[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Для Internet Explorer */
+.no-spinner::-ms-clear {
+  display: none;
+}
+
+/* Для Edge */
+.no-spinner::-ms-reveal {
+  display: none;
+}
 .support_modal{
   position: fixed;
   top: 40%;
@@ -524,7 +540,6 @@ const closeModalVacancy = () => {
 }
 .inputField input {
     border: none;
-    color: black;
     outline: none;
     background-color: #1C1C1C;
   }

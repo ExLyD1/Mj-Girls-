@@ -8,10 +8,10 @@
         <div class="text-sm">К сожалению, доступ к основному сайту часто блокируется Роскомнадзором. Несмотря на блокировку, сайт продолжает работать. Будь в курсе всех событий, а так же подпишись на наш Телеграм-канал, чтобы участвовать в розыгрышах</div>
       </div>
         
-      <router-link class="flex flex-row gap-2 items-center justify-center px-5 py-2 text-white bg-myRed rounded-xl mt-9 w-64 tg" to="/">
+      <a href="https://t.me/+PcI-DvFPG2thZWM6" class="flex flex-row gap-2 items-center justify-center px-5 py-2 text-white bg-myRed rounded-xl mt-9 w-64 tg" to="/">
         <img src="@/assets/footer/telegram.png" alt="">
         <p>Telegram Канал</p>
-      </router-link>
+      </a>
     </div>
 
     <!-- Картинка на заднем плане -->

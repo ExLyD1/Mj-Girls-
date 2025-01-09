@@ -188,13 +188,20 @@
 
       </div>
 
-      <div 
-        @click="openTelegram" 
+      <div v-if="isLoading" class="flex justify-center items-center h-40">
+        <div class="animate-spin border-4 border-t-4 border-pink-500 border-solid w-12 h-12 rounded-full"></div>
+      </div>
+      <div v-if="slutStore.statusMessage" class="text-white text-center text-2xl py-4">
+        {{ slutStore.statusMessage }}
+      </div>
+
+      <a 
+        href="https://t.me/MajesticGirlsSupport_Bot"
         class="bg-myRed cardNum2 text-white text-xl rounded-3xl text-center px-5 py-4 h-12 w-3/4 flex items-center justify-center mt-7 cursor-pointer gap-4"
       >
         <img src="@/assets/footer/telegram.png" alt="">
         Написать в Телеграм
-      </div>
+      </a>
       
     </div>
 
@@ -207,13 +214,13 @@
         <div>Сумма к оплате больше 30 тыс. руб. Пожалуйста, обратитесь в поддержку для оформления заказа!</div>
       </div>
 
-      <div 
-        @click="openTelegram" 
+      <a 
+        href="https://t.me/MajesticGirlsSupport_Bot"
         class="bg-myRed cardNum2 text-white text-xl rounded-3xl text-center px-5 py-4 h-12 w-3/4 flex items-center justify-center mt-7 cursor-pointer gap-4"
       >
         <img src="@/assets/footer/telegram.png" alt="">
         Написать в Телеграм
-      </div>
+      </a>
       
     </div>
       
@@ -511,7 +518,7 @@ import MySwiper from '@/components/slutPage/MySwiper.vue';
 import { useRoute } from 'vue-router';
 import { useSlutStore } from '../stores/SlutStore';
 import axios from 'axios';
-
+import { frontendServerLink } from '../App.vue'
 
 const route = useRoute(); 
 const slutStore = useSlutStore()
@@ -670,7 +677,7 @@ const getCardNumber = async() => {
   }
   isTimeSelected.value = true
 
-  const response = await axios.get(`http://localhost:3000/api/cards`)
+  const response = await axios.get(`${slutStore.frontendServerLink}/api/cards`)
   const data = response.data
 
   startTimer()
@@ -710,11 +717,7 @@ const handleFileUpload = async (event) => {
   if (file) {
     selectedFile.value = file;
     
-    // Создаем FormData для отправки файла
-    const formData = new FormData();
-    formData.append('file', file);
-    
-    slutStore.fetchUpload(formData)
+    slutStore.fetchUpload(file)
   }
 };
 
@@ -725,6 +728,24 @@ const handleFileUpload = async (event) => {
 const openTelegram = () => {
   window.location.href = telegramLinkWeb;
 };
+
+// ================================================
+// Смотрим ли есть такая модель при обновлении страчки
+// ================================================
+
+onMounted(async () => {
+  
+  slutStore.setId(route.params.id); 
+  
+  if ( slutStore.sluts.length == 0 && !slutStore.isFetching) {
+    
+    await slutStore.fetchSluts();
+  }
+
+});
+
+
+
 </script>
 
 <style scoped>

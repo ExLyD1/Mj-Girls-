@@ -20,24 +20,6 @@ import { useSlutStore } from '@/stores/SlutStore.js';
 const route = useRoute();  // Получаем текущий маршрут
 const slutStore = useSlutStore();  // Получаем доступ к хранилищу
 
-
-
-
-
-onMounted(() => {
-  
-  // Следим за изменением параметра id в маршруте
-  watch(() => route.params.id, async (newId) => {
-    if (newId) {
-      slutStore.setId(newId);  // Обновляем хранилище с параметром id
-      
-      
-      // После обновления id отправляем запрос
-      await slutStore.fetchSluts();
-      
-    }
-  });
-});
 </script>
 
 <style>
@@ -64,4 +46,5 @@ onMounted(() => {
   border-radius: 10px; /* Скругление */
   border: 2px solid #555; /* Граница вокруг ползунка */
 }
+
 </style>

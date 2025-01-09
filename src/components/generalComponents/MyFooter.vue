@@ -9,27 +9,27 @@
         </div>
         <div class="text-white font-medium">
           <p>Оформить заказ</p>
-          <router-link class="flex flex-row items-center justify-center gap-3 mt-2 bg-myRed rounded-xl py-3 px-4 w-279 tg_button">
+          <a href="https://t.me/MajesticGirlsSupport_Bot" class="flex flex-row items-center justify-center gap-3 mt-2 bg-myRed rounded-xl py-3 px-4 w-279 tg_button">
             <img src="@/assets/footer/telegram.png" alt="">
             <p class="text-xl">Написать в Telegram</p>
-          </router-link>
+          </a>
         </div>
       </div>
 
 
       <div class="flex flex-row gap-14 all_options">
         <div class="flex flex-col gap-5 w-142 first_options">
-          <router-link>Главная</router-link>
-          <router-link>О проекте</router-link>
-          <router-link>Реклама на сайте</router-link>
-          <router-link>HEALTH+</router-link>
-          <router-link>Города</router-link>
+          <router-link to="/">Главная</router-link>
+          <router-link to="/">О проекте</router-link>
+          <router-link to="/">Реклама на сайте</router-link>
+          <router-link to="/">HEALTH+</router-link>
+          <router-link to="/">Города</router-link>
         </div>
         <div class="flex flex-col gap-5 w-256 second_options">
-          <router-link>Пользовательское соглашение для клиентов</router-link>
-          <router-link>Пользовательское соглашение для рекламодателей</router-link>
-          <router-link>Политика конфиденциальности </router-link>
-          <router-link>Контакты</router-link>
+          <a href="https://telegra.ph/Majestic-Girls---polzovatelskoe-soglashenie-dlya-klientov-07-17" target="_blank" rel="noopener noreferrer">Пользовательское соглашение для клиентов</a>
+          <a href="https://telegra.ph/Majestic-Girls---polzovatelskoe-soglashenie-dlya-klientov-07-17" target="_blank" rel="noopener noreferrer">Пользовательское соглашение для рекламодателей</a>
+          <a href="https://telegra.ph/Majestic-Girls---polzovatelskoe-soglashenie-dlya-klientov-07-17" target="_blank" rel="noopener noreferrer">Политика конфиденциальности</a>
+          <a href="https://telegra.ph/Majestic-Girls---polzovatelskoe-soglashenie-dlya-klientov-07-17" target="_blank" rel="noopener noreferrer">Контакты</a>
         </div>
       </div>
 

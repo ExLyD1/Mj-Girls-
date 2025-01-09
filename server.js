@@ -3,11 +3,11 @@ const cors = require('cors');
 const path = require('path');
 const app = express();
 const port = 3000;  // Порт для вашего Express сервера
-const mongoose = require('mongoose');
 const axios = require('axios');
+const mongoose = require('mongoose');
 const multer = require('multer');
 const FormData = require('form-data');
-
+const backendServerLink = 'http://185.106.93.42'
 // Включаем CORS
 app.use(cors());
 app.use(express.json());
@@ -22,51 +22,60 @@ const upload = multer({
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'];
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
-    } else {
+    } else {0
       cb(new Error('Неверный формат файла, допускаются только PDF и изображения'), false);
     }
-  }
+    }
 });
 
 // Настройки Telegram бота
 const BOT_TOKEN = '7495422433:AAEjsD32grXV6w1fUuWZSRsrPD6KuiwZ5lA';
 const CHAT_ID = 'YOUR_CHAT_ID';
 
-const { ObjectId } = require('mongodb'); // Для работы с ObjectId
 
 app.post('/upload', upload.single('file'), async (req, res) => {
-  console.log("тело запроса : ",req.body);
   try {
-    // Извлекаем modelId из тела запроса
-    
-
     const { modelId } = req.body;
 
-    if (!modelId) {
-      return res.status(400).json({ error: 'Не указан modelId' });
-    }
 
-    // Ищем документ в MongoDB
     const db = mongoose.connection.db;
-    const collection = db.collection('ankets'); // Замените 'models' на имя вашей коллекции
+    const collection = db.collection('ankets'); 
     const document = await collection.findOne({ _id: Number(modelId) });
-    
-    
 
-    if (!document) {
-      console.error('Документ с таким modelId не найден');
-      console.log('айди модели согласно запросу : ', Number(modelId));
-      
-      return res.status(404).json({ error: 'Документ с таким modelId не найден' });
-    }
 
-    // Получаем поле user
+
     const user = document.user;
 
-    console.log('Найденный пользователь:', user);
 
-    // Здесь можно продолжить обработку данных или просто завершить
-    res.status(200).json({ message: 'Пользователь найден', user });
+    const fileType = req.file.mimetype;
+
+    if (fileType.startsWith('image/')) {
+      
+      const formData = new FormData();
+      formData.append('chat_id', user); 
+      formData.append('photo', req.file.buffer, req.file.originalname);
+      formData.append('caption', `📸 Фото чека, с помощью которого оплатили модель: ${document.name} | ${document._id}`);
+
+
+      const response = await axios.post('https://api.telegram.org/bot7495422433:AAEjsD32grXV6w1fUuWZSRsrPD6KuiwZ5lA/sendPhoto', formData, );
+
+
+      return res.status(200).json({ message: 'Изображение успешно отправлено в Telegram', response: response.data });
+
+    } else if (fileType === 'application/pdf') {
+      
+      const formData = new FormData();
+      formData.append('chat_id', user);
+      formData.append('document', req.file.buffer, req.file.originalname);
+      formData.append('caption', `📄 PDF документ для модели: ${document.name} | ${document._id}`);
+
+      const response = await axios.post(`https://api.telegram.org/bot7495422433:AAEjsD32grXV6w1fUuWZSRsrPD6KuiwZ5lA/sendDocument`, formData);
+
+      return res.status(200).json({ message: 'PDF успешно отправлен в Telegram', response: response.data });
+
+    } else {
+      return res.status(400).json({ error: 'Недопустимый формат файла' });
+    }
 
   } catch (error) {
     console.error('Ошибка при обработке запроса:', error.message);
@@ -164,5 +173,5 @@ app.get('*', (req, res) => {
 
 // Запуск сервера
 app.listen(port, () => {
-  console.log(`Сервер запущен на http://localhost:${port}`);
+  console.log(`Сервер запущен на ${backendServerLink}:${port}`);
 });

@@ -6,7 +6,10 @@ export const useSlutStore = defineStore( 'slutStore', {
         sluts: [],
         isLoading: false,
         id: null,
-        modelId: null
+        modelId: null,
+        statusMessage: '',
+        isFetching: false,
+        frontendServerLink: 'http://185.106.93.42:8080',
     }),
     actions: {
         setId(id) {
@@ -14,41 +17,71 @@ export const useSlutStore = defineStore( 'slutStore', {
         },
         async fetchSluts() {
             if (!this.id) return;
+            if (this.isFetching) return;
             this.isLoading = true;
-
-            
+            this.isFetching = true;
 
             try {
-                let response = await axios.get(`http://localhost:3000/api/search?id=${this.id}`);
-                console.log("data form req : ", response.data.data);
+                let response = await axios.get(`${this.frontendServerLink}/api/search?id=${this.id}`);
 
                 this.modelId = response.data.data._id
                 
                 this.sluts.push(response.data)
 
-                console.log("slut store : ",this.sluts);
+                
             } catch (error) {
                 console.error(error);
                 this.sluts = [];
             } finally {
                 this.isLoading = false;
+                this.isFetching = false;
                 
             }
         },
-        async fetchUpload(data) {
-            const finalData = data
-            finalData.append('modelId', this.modelId);
+        async fetchSlutsByInput(id) {
+            if (this.isFetching) return;
+            this.isFetching = true;
+            try {
+                let response = await axios.get(`${this.frontendServerLink}/api/search?id=${id}`);
+
+                this.modelId = response.data.data._id
+                
+                this.sluts.push(response.data)
+                
+            } catch (error) {
+                console.error(error);
+                this.sluts = [];
+            } finally {
+                this.isLoading = false;
+                this.isFetching = false;
+            }
+        },
+
+
+
+
+        async fetchUpload(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('modelId', this.modelId);
+            this.isLoading = true;
             
             try {
-                const response = await axios.post('http://localhost:3000/upload', finalData, {
+                const response = await axios.post(`${this.frontendServerLink}/upload`, formData, {
                     headers: {
-                    'Content-Type': 'multipart/form-data',
+                        'Content-Type': 'multipart/form-data',
                     },
                 });
-                console.log(response.data);
+
+                this.statusMessage = 'Данные переданы успешно. Перейдите в телеграм';
 
             } catch (error) {
+                
+                this.statusMessage = 'Ошибка, загрузите другой файл или картинку';
+                
                 console.error('Ошибка при загрузке файла:', error);
+            } finally {
+                this.isLoading = false;
             }
         }
         
