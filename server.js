@@ -7,7 +7,7 @@ const axios = require('axios');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const FormData = require('form-data');
-const backendServerLink = 'http://185.106.93.42'
+const backendServerLink = 'http://localhost'
 // Включаем CORS
 app.use(cors());
 app.use(express.json());
@@ -39,7 +39,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
 
     const db = mongoose.connection.db;
-    const collection = db.collection('ankets'); 
+    const collection = db.collection('dankets'); 
     const document = await collection.findOne({ _id: Number(modelId) });
 
 
@@ -101,6 +101,49 @@ mongoose.connect('mongodb://localhost:27017/webesc', {
 
 
 
+// Маршрут для поиска пользователей по городу
+app.get('/api/searchByCity', async (req, res) => {
+  const { city, skip, limit } = req.query;
+
+  if (!city) {
+    return res.status(400).json({ error: 'Не указан город' });
+  }
+
+  const skipNumber = parseInt(skip) || 0;
+  const limitNumber = parseInt(limit) || 15;
+
+  try {
+    const db = mongoose.connection.db;
+    const collection = db.collection('dankets');
+
+    const result = await collection
+      .find({ city: city })
+      .skip(skipNumber)
+      .limit(limitNumber)
+      .toArray();
+
+    // Если анкеты найдены, отправляем их
+    if (result.length > 0) {
+      return res.status(200).json({ success: true, data: result });
+    }
+
+    // Если нет анкет, возвращаем сообщение, что анкеты закончились
+    return res.status(404).json({ success: false, message: 'Пользователи не найдены' });
+
+  } catch (error) {
+    console.error('Ошибка при поиске по городу:', error);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
+
+
+
+
+
+
+
+
 const API_ENDPOINT = 'http://217.197.107.144:3000';
 
 
@@ -132,7 +175,7 @@ app.get('/api/search', async (req, res) => {
   try {
     // Получаем доступ к коллекции ankets
     const db = mongoose.connection.db;
-    const collection = db.collection('ankets');
+    const collection = db.collection('dankets');
 
     // Ищем анкету по _id
     const result = await collection.findOne({ _id: parseInt(id) });

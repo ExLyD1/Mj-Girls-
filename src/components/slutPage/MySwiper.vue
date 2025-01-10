@@ -10,7 +10,7 @@
     class="w-295"
   >
 
-    <swiper-slide v-for="(link, index) in model.data.photo_links" :key="index" class="w-[295px] h-[300px] overflow-hidden">
+    <swiper-slide v-for="(link, index) in model.photo_links" :key="index" class="w-[295px] h-[300px] overflow-hidden">
       <img class="w-full h-full object-cover rounded-2xl" :src="link" alt="">
     </swiper-slide>
   </swiper>
@@ -25,7 +25,7 @@
     
   >
 
-    <swiper-slide v-for="(link, index) in model.data.photo_links" :key="index" class="w-[65px] h-[65px] overflow-hidden">
+    <swiper-slide v-for="(link, index) in model.photo_links" :key="index" class="w-[65px] h-[65px] overflow-hidden">
       <img class="w-full h-full object-cover rounded-lg cursor-pointer " :src="link" alt="">
     </swiper-slide>
   </swiper>

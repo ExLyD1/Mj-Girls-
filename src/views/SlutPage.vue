@@ -85,7 +85,7 @@
             
             <div 
               class="flex flex-row justify-between gap-5 mt-3 timeBlock"
-              v-for="(category, index) in model.data.additional"
+              v-for="(category, index) in model.additional"
               :key="index"
             >
               <div class="flex flex-col gap-1 text-white w-52">
@@ -156,7 +156,7 @@
 
       <div class="flex flex-col gap-2 text-white w-3/4">
         <div class="text-2xl font-medium pb-2 pt-10">Номер заказа: 57649</div>
-        <div class="text-2xl font-medium pb-4">Код модели: {{ model.data._id }}</div>
+        <div class="text-2xl font-medium pb-4">Код модели: {{ model._id }}</div>
 
 
         <div class="flex flex-col gap-6 mt-6 w-full">
@@ -235,7 +235,7 @@
   
   <!-- Сама страничка -->
 
-  <div v-if="model" class="container_slut m-auto w-1240 full_landing flex flex-row pb-52 pt-5 gap-3">
+   <div v-if="model" class="container_slut m-auto w-1240 full_landing flex flex-row pb-52 pt-5 gap-3">
 
     <div class="flex flex-col gap-5 w-295 aside">
       <my-swiper :model="model"></my-swiper>
@@ -257,15 +257,15 @@
               <my-tariff class="bg-myRed">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/sun.png" alt=""></template>
                 <template #time>          <p>1 час</p>      </template>
-                <template #price_me>      <p class="text-sm">{{ model.data.hourPrices[0].price }} ₽</p>   </template>
-                <template #price_you>     <p class="text-sm">{{ model.data.hourPrices[2].price }} ₽</p>   </template>
+                <template #price_me>      <p class="text-sm">{{ model.hourPrices[0].price }} ₽</p>   </template>
+                <template #price_you>     <p class="text-sm">{{ model.hourPrices[2].price }} ₽</p>   </template>
               </my-tariff>
 
               <my-tariff class="bg-myRed">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/sun.png" alt=""></template>
                 <template #time>          <p>3 часа</p>      </template>
-                <template #price_me>      <p class="text-sm"> {{ ( model.data.hourPrices[0].price * 3 ) - ( model.data.hourPrices[0].price * 3 * 20 / 100 ) }} ₽</p>   </template>
-                <template #price_you>     <p class="text-sm"> {{ ( model.data.hourPrices[2].price * 3 ) - ( model.data.hourPrices[2].price * 3 * 20 / 100 ) }} ₽</p>   </template>
+                <template #price_me>      <p class="text-sm"> {{ ( model.hourPrices[0].price * 3 ) - ( model.hourPrices[0].price * 3 * 20 / 100 ) }} ₽</p>   </template>
+                <template #price_you>     <p class="text-sm"> {{ ( model.hourPrices[2].price * 3 ) - ( model.hourPrices[2].price * 3 * 20 / 100 ) }} ₽</p>   </template>
               </my-tariff>
             </div>
 
@@ -274,15 +274,15 @@
               <my-tariff class="bg-myLightDark">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/moon.png" alt=""></template>
                 <template #time>          <p>1 час</p>      </template>
-                <template #price_me>      <p class="text-myRed text-sm">{{ model.data.hourPrices[0].price }} ₽</p>   </template>
-                <template #price_you>     <p class="text-myRed text-sm">{{ model.data.hourPrices[0].price }} ₽</p>   </template>
+                <template #price_me>      <p class="text-myRed text-sm">{{ model.hourPrices[0].price }} ₽</p>   </template>
+                <template #price_you>     <p class="text-myRed text-sm">{{ model.hourPrices[0].price }} ₽</p>   </template>
               </my-tariff>
 
               <my-tariff class="bg-myLightDark">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/moon.png" alt=""></template>
                 <template #time>          <p>Ночь</p>      </template>
-                <template #price_me>      <p class="text-myRed text-sm">{{ model.data.hourPrices[1].price }} ₽</p>   </template>
-                <template #price_you>     <p class="text-myRed text-sm">{{ model.data.hourPrices[1].price }} ₽</p>   </template>
+                <template #price_me>      <p class="text-myRed text-sm">{{ model.hourPrices[1].price }} ₽</p>   </template>
+                <template #price_you>     <p class="text-myRed text-sm">{{ model.hourPrices[1].price }} ₽</p>   </template>
               </my-tariff>
             </div>
 
@@ -298,7 +298,7 @@
 
       <div class="py-3 px-5 bg-myDark rounded-2xl w-870 rightPart">
         <div class="flex flex-row justify-between w-full mb-3">
-          <h1 @click="api_req" class="text-2xl">{{ model.data.name }}</h1>
+          <h1 @click="api_req" class="text-2xl">{{ model.name }}</h1>
           <div class="bg-myLightDark rounded-lg p-2">
             <img class="h-7 w-7" src="@/assets/landing/favorite_False.png" alt="">
           </div>
@@ -306,32 +306,32 @@
 
         <div class="flex flex-col gap-3">
           <div class="flex flex-row justify-between gap-4 buttWrapper">
-            <div class="bg-myLightDark text-center rounded-xl py-2 width49">{{ model.data.city }}</div>
+            <div class="bg-myLightDark text-center rounded-xl py-2 width49">{{ model.city }}</div>
             <div class="bg-myRed text-center rounded-xl py-2 width49">VIP</div>
           </div>
 
           <div class="flex flex-row justify-between gap-3 categor">
             <div class="flex flex-col gap-1 w-40 py-3 px-5 bg-myLightDark rounded-xl card_har">
               <div class=" font-medium">Характеристики</div>
-              <div>Возраст: {{ model.data.age }}</div>
-              <div>Рост: {{ model.data.height }}см</div>
-              <div>Вес: {{ model.data.weight }}кг</div>
-              <div>Грудь: {{ model.data.boobs }}</div>
+              <div>Возраст: {{ model.age }}</div>
+              <div>Рост: {{ model.height }}см</div>
+              <div>Вес: {{ model.weight }}кг</div>
+              <div>Грудь: {{ model.boobs }}</div>
             </div>
             <div class="flex flex-col justify-center items-center gap-1 w-36 py-3 px-4 bg-myLightDark rounded-xl card">
-              <div> {{ model.data.category1 }}</div>
+              <div> {{ model.category1 }}</div>
               <div><img src="@/assets/slutPage/location.png" alt=""></div>
             </div>
             <div class="flex flex-col justify-center items-center gap-1 w-36 py-3 px-4 bg-myLightDark rounded-xl card">
-              <div>{{ model.data.category2 }}</div>
+              <div>{{ model.category2 }}</div>
               <div><img src="@/assets/slutPage/building.png" alt=""></div>
             </div>
             <div class="flex flex-col justify-center items-center gap-1 w-36 py-3 px-4 bg-myLightDark rounded-xl card">
-              <div>{{ model.data.category3 }}</div>
+              <div>{{ model.category3 }}</div>
               <div><img src="@/assets/slutPage/cake.png" alt=""></div>
             </div>
             <div class="flex flex-col justify-center items-center gap-1 w-36 py-3 px-4 bg-myGreen rounded-xl card">
-              <div>{{ model.data.category4 }}</div>
+              <div>{{ model.category4 }}</div>
               <div><img src="@/assets/slutPage/heart.png" alt=""></div>
             </div>
           </div>
@@ -343,7 +343,7 @@
       <div class="bg-myDark rounded-2xl p-5 w-870 flex flex-col categories">
         <h1 class="text-2xl mb-4">Предпочтения</h1>
         <div class="flex flex-wrap justify-between">
-          <div v-for="(category, index) in model.data.additional" :key="index" class="w-270 mb-4">
+          <div v-for="(category, index) in model.additional" :key="index" class="w-270 mb-4">
             <h2 class="text-xl mb-2">{{ category.name }}</h2>
             <ul>
               <li v-for="(option, idx) in category.options" :key="idx" class="flex flex-col">
@@ -402,7 +402,7 @@
 
       <div class="py-3 px-5 bg-myDark rounded-2xl w-870 rightPart">
         <div class="flex flex-row justify-between w-full mb-3">
-          <h1 class="text-2xl">{{ model.data.name }}</h1>
+          <h1 class="text-2xl">{{ model.name }}</h1>
           <div class="bg-myLightDark rounded-lg p-2">
             <img class="h-7 w-7" src="@/assets/landing/favorite_False.png" alt="">
           </div>
@@ -410,32 +410,32 @@
 
         <div class="flex flex-col gap-3">
           <div class="flex flex-row justify-between gap-4 buttWrapper">
-            <div class="bg-myLightDark text-center rounded-xl py-2 width49">{{ model.data.city }}</div>
+            <div class="bg-myLightDark text-center rounded-xl py-2 width49">{{ model.city }}</div>
             <div class="bg-myRed text-center rounded-xl py-2 width49">VIP</div>
           </div>
 
           <div class="flex flex-row justify-between gap-3 categor">
             <div class="flex flex-col gap-1 w-40 py-3 px-5 bg-myLightDark rounded-xl card_har">
               <div class=" font-medium">Характеристики</div>
-              <div>Возраст: {{ model.data.age}}</div>
-              <div>Рост: {{ model.data.height }}см</div>
-              <div>Вес: {{ model.data.weight }}кг</div>
-              <div>Грудь: {{ model.data.boobs }}</div>
+              <div>Возраст: {{ model.age}}</div>
+              <div>Рост: {{ model.height }}см</div>
+              <div>Вес: {{ model.weight }}кг</div>
+              <div>Грудь: {{ model.boobs }}</div>
             </div>
             <div class="flex flex-col justify-center items-center gap-1 w-36 py-3 px-4 bg-myLightDark rounded-xl card">
-              <div>{{ model.data.category1 }}</div>
+              <div>{{ model.category1 }}</div>
               <div><img src="@/assets/slutPage/location.png" alt=""></div>
             </div>
             <div class="flex flex-col justify-center items-center gap-1 w-36 py-3 px-4 bg-myLightDark rounded-xl card">
-              <div> {{ model.data.category2 }}</div>
+              <div> {{ model.category2 }}</div>
               <div><img src="@/assets/slutPage/building.png" alt=""></div>
             </div>
             <div class="flex flex-col justify-center items-center gap-1 w-36 py-3 px-4 bg-myLightDark rounded-xl card">
-              <div> {{ model.data.category3 }}</div>
+              <div> {{ model.category3 }}</div>
               <div><img src="@/assets/slutPage/cake.png" alt=""></div>
             </div>
             <div class="flex flex-col justify-center items-center gap-1 w-36 py-3 px-4 bg-myGreen rounded-xl card">
-              <div> {{ model.data.category4 }}</div>
+              <div> {{ model.category4 }}</div>
               <div><img src="@/assets/slutPage/heart.png" alt=""></div>
             </div>
           </div>
@@ -451,15 +451,15 @@
               <my-tariff class="bg-myRed">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/sun.png" alt=""></template>
                 <template #time>          <p>1 час</p>      </template>
-                <template #price_me>      <p class="text-sm">{{ model.data.hourPrices[0].price }} ₽</p>   </template>
-                <template #price_you>     <p class="text-sm">{{ model.data.hourPrices[2].price }} ₽</p>   </template>
+                <template #price_me>      <p class="text-sm">{{ model.hourPrices[0].price }} ₽</p>   </template>
+                <template #price_you>     <p class="text-sm">{{ model.hourPrices[2].price }} ₽</p>   </template>
               </my-tariff>
 
               <my-tariff class="bg-myRed">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/sun.png" alt=""></template>
                 <template #time>          <p>3 часа</p>      </template>
-                <template #price_me>      <p class="text-sm"> {{ ( model.data.hourPrices[0].price * 3 ) - ( model.data.hourPrices[0].price * 3 * 20 / 100 ) }} ₽</p>   </template>
-                <template #price_you>     <p class="text-sm"> {{ ( model.data.hourPrices[2].price * 3 ) - ( model.data.hourPrices[2].price * 3 * 20 / 100 ) }} ₽</p>   </template>
+                <template #price_me>      <p class="text-sm"> {{ ( model.hourPrices[0].price * 3 ) - ( model.hourPrices[0].price * 3 * 20 / 100 ) }} ₽</p>   </template>
+                <template #price_you>     <p class="text-sm"> {{ ( model.hourPrices[2].price * 3 ) - ( model.hourPrices[2].price * 3 * 20 / 100 ) }} ₽</p>   </template>
               </my-tariff>
             </div>
 
@@ -468,15 +468,15 @@
               <my-tariff class="bg-myLightDark">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/moon.png" alt=""></template>
                 <template #time>          <p>1 час</p>      </template>
-                <template #price_me>      <p class="text-myRed text-sm">{{ model.data.hourPrices[0].price }} ₽</p>   </template>
-                <template #price_you>     <p class="text-myRed text-sm">{{ model.data.hourPrices[0].price }} ₽</p>   </template>
+                <template #price_me>      <p class="text-myRed text-sm">{{ model.hourPrices[0].price }} ₽</p>   </template>
+                <template #price_you>     <p class="text-myRed text-sm">{{ model.hourPrices[0].price }} ₽</p>   </template>
               </my-tariff>
 
               <my-tariff class="bg-myLightDark">
                 <template #tariff_img>    <img class="w-6 h-6" src="@/assets/slutPage/moon.png" alt=""></template>
                 <template #time>          <p>Ночь</p>      </template>
-                <template #price_me>      <p class="text-myRed text-sm">{{ model.data.hourPrices[1].price }} ₽</p>   </template>
-                <template #price_you>     <p class="text-myRed text-sm">{{ model.data.hourPrices[1].price }} ₽</p>   </template>
+                <template #price_me>      <p class="text-myRed text-sm">{{ model.hourPrices[1].price }} ₽</p>   </template>
+                <template #price_you>     <p class="text-myRed text-sm">{{ model.hourPrices[1].price }} ₽</p>   </template>
               </my-tariff>
             </div>
 
@@ -488,7 +488,7 @@
       <div class="bg-myDark rounded-2xl p-5 w-870 flex flex-col categories">
         <h1 class="text-2xl mb-4">Предпочтения</h1>
         <div class="flex flex-wrap justify-between">
-          <div v-for="(category, index) in model.data.additional" :key="index" class="w-270 mb-4">
+          <div v-for="(category, index) in model.additional" :key="index" class="w-270 mb-4">
             <h2 class="text-xl mb-2">{{ category.name }}</h2>
             <ul>
               <li v-for="(option, idx) in category.options" :key="idx" class="flex flex-col">
@@ -505,7 +505,8 @@
 
     </div>
 
-  </div>
+  </div> 
+
 
 
   
@@ -518,7 +519,6 @@ import MySwiper from '@/components/slutPage/MySwiper.vue';
 import { useRoute } from 'vue-router';
 import { useSlutStore } from '../stores/SlutStore';
 import axios from 'axios';
-import { frontendServerLink } from '../App.vue'
 
 const route = useRoute(); 
 const slutStore = useSlutStore()
@@ -579,9 +579,11 @@ const additionalValues = ref(['', '', '']);
 // ================================================
 // Находим модель
 // ================================================
+// console.log(slutStore.sluts);
+
 const model = computed(() => {
   const id = String(route.params.id); 
-  const foundModel = slutStore.sluts.find(slut => String(slut.data._id) === id); 
+  const foundModel = slutStore.sluts.find(slut => String(slut._id) === id); 
   
   return foundModel;
 });
@@ -626,7 +628,7 @@ const updateAdditionalValues = (index, value) => {
   additionalValues.value[index] = value; 
 };
 const total_price = computed(() => {
-  return slutStore.getPrice(model.value.data._id, selectedOptionPayment.value, additionalValues.value, selectedPlace.value); 
+  return slutStore.getPrice(model.value._id, selectedOptionPayment.value, additionalValues.value, selectedPlace.value); 
 });
 
 
@@ -736,11 +738,9 @@ const openTelegram = () => {
 onMounted(async () => {
   
   slutStore.setId(route.params.id); 
-  
-  if ( slutStore.sluts.length == 0 && !slutStore.isFetching) {
     
-    await slutStore.fetchSluts();
-  }
+  await slutStore.fetchSluts();
+  
 
 });
 

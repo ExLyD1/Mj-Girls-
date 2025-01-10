@@ -67,7 +67,7 @@
 
 
 
-    <div @click="goToProfile(slut.data._id)" class="bg-myRed w-full flex items-center justify-center text-center rounded-lg h-12 p-2 cursor-pointer">Полная Анкета</div>
+    <div @click="goToProfile(slut._id)" class="bg-myRed w-full flex items-center justify-center text-center rounded-lg h-12 p-2 cursor-pointer">Полная Анкета</div>
 
   </div>
 </template>

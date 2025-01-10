@@ -23,8 +23,8 @@
 
 
       <div class="flex flex-row gap-2 under_input_options">
-        <router-link class="bg-myDark px-3 py-2 w-36 rounded-xl text-center butt" to="/">Модели</router-link>
-        <router-link  class="bg-myDark px-3 py-2 w-36 rounded-xl text-center butt" to="/">Health+</router-link>
+        <router-link class="bg-myDark px-3 py-2 w-36 rounded-xl text-center butt cursor-pointer" to="/">Модели</router-link>
+        <div @click="openModalHealth" class="bg-myDark px-3 py-2 w-36 rounded-xl text-center butt cursor-pointer" to="/">Health+</div>
         <div @click="openModalSupp" class="bg-myDark px-3 py-2 w-36 rounded-xl text-center cursor-pointer butt">Поддержка</div>
         <div @click="openModalVacancy" class="bg-myDark px-3 py-2 w-36 rounded-xl text-center cursor-pointer butt">Вакансии</div>
       </div>
@@ -34,8 +34,6 @@
 
     <div class="flex flex-col gap-2 header_options">
       <div class="flex flex-row items-center gap-5 font-medium">
-        <!-- <router-link to="/favorite">Избранное</router-link> -->
-        <!-- <router-link class=" bg-myRed p-3 rounded-xl" to="/profile">Профиль</router-link> -->
       </div>
       <div @click="openCities" class="flex flex-row justify-between gap-5 py-2 px-4 bg-myDark rounded-lg cursor-pointer">
         <div v-if="cityName"> {{ cityName }}</div>
@@ -53,6 +51,7 @@
 
       <div v-if="isMobileViewSearch & isSearchVisible" :class="{'activeSearch': isSearchVisible && isMobileViewSearch, 'inputField': true, }" class="flex justify-between">
         <input 
+          ref="searchInput"
           class="text-white no-spinner"
           type="number" 
           placeholder="Поиск по номеру"
@@ -80,28 +79,10 @@
     </div>
 
     <div class="flex flex-row justify-center flex-wrap gap-2 absolute categor_holder">
-      <div @click="navigateAndReload('/')" class="bg-myLightDark rounded-xl catagories">Модели</div>
-      <div @click="navigateAndReload('/')" class="bg-myLightDark rounded-xl catagories">Health+</div>
-      <div @click="openModalSupp" class="bg-myLightDark rounded-xl catagories">Поддержка</div>
-      <div @click="openModalVacancy" class="bg-myLightDark rounded-xl catagories">Вакансии</div>
-    </div>
-
-    <div v-if="isAuthored" class="absolute mt-135 flex flex-col gap-2 w-full justify-center items-center log_holder">
-      <!-- <button 
-        :class="[getButtonClass('/profile')]" 
-        @click="navigateAndReload('/profile')" 
-        class="rounded-2xl px-5 py-4 bg-myLightDark text-center w-300"
-      >Профиль</button>
-      <button 
-        :class="[getButtonClass('/favorite')]" 
-        @click="navigateAndReload('/favorite')" 
-        class="rounded-2xl px-5 py-4 bg-myLightDark text-center w-300"
-      >Избранное</button>
-      <button 
-        :class="[getButtonClass('/changePass')]" 
-        @click="navigateAndReload('/changePass')"
-        class="rounded-2xl px-5 py-4 bg-myLightDark text-center w-300"
-      >Изменить пароль</button> -->
+      <div @click="navigateAndReload('/')" class="bg-myLightDark rounded-xl catagories cursor-pointer">Модели</div>
+      <div @click="openModalHealth" class="bg-myLightDark rounded-xl catagories cursor-pointer">Health+</div>
+      <div @click="openModalSupp" class="bg-myLightDark rounded-xl catagories cursor-pointer">Поддержка</div>
+      <div @click="openModalVacancy" class="bg-myLightDark rounded-xl catagories cursor-pointer">Вакансии</div>
     </div>
 
     <div @click="openCities" class="absolute bg-myLightDark mt-96 flex justify-between rounded-xl px-5 py-4 w-300">
@@ -109,35 +90,39 @@
       <div v-else>Выберите город</div>
       <img src="@/assets/header/arrow.svg" alt="">
     </div>
-    <!-- <div v-if="isAuthored" class="absolute mt-450 rounded-2xl px-5 py-4 border-2 border-myRed text-center w-300">Выйти</div> -->
-    <!-- <div v-else @click="navigateAndReload('/login')" class="absolute mt-450 rounded-xl px-5 py-4 bg-myRed text-center w-300">Войти</div> -->
   </div>
 
 
 
   <!-- Список городов -->
-  <div v-if="citiesVisible" :class="{ 'cities_list': true, 'active': citiesVisible }" class="flex flex-col mt-2" ref="modalContentRef">
-    <div class="flex w-full justify-end">
-      <div @click="closeCities">
-        <img class="w-10 h-10" src="@/assets/header/close.png" alt="Cancel">
+  <div v-if="citiesVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+    <div 
+      ref="modalContentRef" 
+      :class="{ 'cities_list': true, 'active': citiesVisible }" 
+      class="bg-gray-800 rounded-lg w-full max-w-lg shadow-lg p-4"
+    >
+      <!-- Заголовок с кнопкой закрытия -->
+      <div class="flex justify-between items-center border-b border-gray-600 pb-2 mb-4">
+        <h2 class="text-lg font-semibold text-white">Выберите город</h2>
+        <button 
+          @click="closeCities" 
+          class="text-gray-400 hover:text-white transition"
+        >
+          <img class="w-6 h-6" src="@/assets/header/close.png" alt="Close">
+        </button>
       </div>
-    </div>
-    <div class="mt-2 w-full rounded-xl bg-myLightDark text-white">
-      <div @click="cityFuncs" class="cursor-pointer border-b border-myMainBg w-full pl-2 py-4">Москва</div>
-      <div @click="cityFuncs" class="cursor-pointer border-b border-myMainBg w-full pl-2 py-4">Санкт-Петербург</div>
-      <div @click="cityFuncs" class="cursor-pointer border-b border-myMainBg w-full pl-2 py-4">Нижний Новгород</div>
-      <div @click="cityFuncs" class="cursor-pointer border-b border-myMainBg w-full pl-2 py-4">Новосибирск</div>
-      <div @click="cityFuncs" class="cursor-pointer border-b border-myMainBg w-full pl-2 py-4">Ростов на дону</div>
-      <div @click="cityFuncs" class="cursor-pointer border-b border-myMainBg w-full pl-2 py-4">Екатеринбург</div>
-      <div @click="cityFuncs" class="cursor-pointer border-b border-myMainBg w-full pl-2 py-4">Казань</div>
-      <div @click="cityFuncs" class="cursor-pointer border-b border-myMainBg w-full pl-2 py-4">Краснодар</div>
-      <div @click="cityFuncs" class="cursor-pointer border-b border-myMainBg w-full pl-2 py-4">Красноярск</div>
-      <div @click="cityFuncs" class="cursor-pointer border-b border-myMainBg w-full pl-2 py-4">Уфа</div>
-      <div @click="cityFuncs" class="cursor-pointer border-b border-myMainBg w-full pl-2 py-4">Мурманск</div>
-      <div @click="cityFuncs" class="cursor-pointer border-b border-myMainBg w-full pl-2 py-4">Иркутск</div>
-      <div @click="cityFuncs" class="cursor-pointer border-b border-myMainBg w-full pl-2 py-4">Владивосток</div>
-      <div @click="cityFuncs" class="cursor-pointer border-b border-myMainBg w-full pl-2 py-4">Самара</div>
-      <div @click="cityFuncs" class="cursor-pointer w-full pl-2 py-4">Волгоград</div>
+      
+      <!-- Список городов -->
+      <div class="grid grid-cols-1 gap-2 text-gray-300">
+        <div 
+          v-for="city in cities" 
+          :key="city" 
+          @click="cityFuncs" 
+          class="cursor-pointer py-2 px-4 rounded-lg hover:bg-gray-700 transition"
+        >
+          {{ city }}
+        </div>
+      </div>
     </div>
   </div>
 
@@ -148,7 +133,7 @@
   <div 
     v-if="isModalSuppVisible" 
     :class="{ 'support_modal': true, 'active': isModalRegVisible }" 
-    class="flex flex-col gap-3 bg-myLightDark rounded-3xl w-full p-5 shadow-2xl pb-12 items-center"
+    class="flex flex-col gap-3 bg-myLightDark rounded-3xl w-full p-5 shadow-2xl pb-12 items-center justify-between"
   >
     <div class="flex flex-row justify-between w-full">
       <div class="text-white text-3xl">Поддержка</div>
@@ -170,13 +155,39 @@
       
   </div>
 
+  <!-- МОдалка Health+ -->
+  <div 
+    v-if="isModalHealthVisible" 
+    :class="{ 'support_modal': true, 'active': isModalRegVisible }" 
+    class="flex flex-col gap-3 bg-myLightDark rounded-3xl w-full p-5 shadow-2xl pb-12 items-center justify-between"
+  >
+    <div class="flex flex-row justify-between w-full">
+      <div class="text-white text-3xl">Health+</div>
+
+      <div class="h-11 rounded-xl cursor-pointer" @click="closeModalHealth">
+        <img class="w-11 h-11" src="@/assets/header/close.png" alt="Cancel">
+      </div>
+    </div>
+
+    <div class="pt-6 text-center text-white text-lg">
+      Самые четкие без спида модели
+    </div>
+
+    <a href="https://t.me/MajesticGirlsSupport_Bot" class="bg-myRed rounded-xl text-white flex items-center justify-center px-10 py-3 gap-4 w-52 mt-4 cursor-pointer">
+      <img src="@/assets/footer/telegram.png" alt="">
+      <p>Телеграм</p>
+    </a>
+
+      
+  </div>
 
 
-  <!-- Модалка Вакансий -->
+
+  <!-- Модалка Вакансий --> 
   <div 
     v-if="isModalVacancyVisible" 
     :class="{ 'vacancy_modal': true, 'active': isModalRegVisible }" 
-    class="flex flex-col gap-3 bg-myLightDark rounded-3xl w-full p-5 shadow-2xl pb-12 items-center"
+    class="flex flex-col gap-3 bg-myLightDark rounded-3xl w-full p-5 shadow-2xl pb-12 items-center justify-between"
   >
     <div class="flex flex-row justify-between w-full">
       <div class="text-white text-3xl">Вакансии</div>
@@ -217,7 +228,7 @@
 
 <script setup>
 import { useSlutStore } from '@/stores/SlutStore.js';
-import { watch, ref, onMounted  } from 'vue'
+import { watch, ref, onMounted, nextTick, computed   } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
 const slutStore = useSlutStore();
 
@@ -239,6 +250,13 @@ const foundModel = async () => {
 
 
 // Импорты
+
+const cities = ref([
+    "Москва", "Санкт-Петербург", "Новгород", "Новосибирск",
+    "Ростов на дону", "Сочи", 'Омск', "Екатеринбург", "Самара", "Барнаул",
+    "Красноярск", "Владивосток", "Комсомольск-на-Амуре",
+]);
+
 
 
 
@@ -272,14 +290,18 @@ const handleResize = () => {
 // =========================================================
 // Поиск
 // =========================================================
-
+const searchInput = ref(null);
 
 const openSearch = () => {
   isSearchVisible.value = true;
+  nextTick(() => {
+    searchInput.value?.focus();
+  });
 };
 
 const closeSearch = () => {
   isSearchVisible.value = false;
+  searchInput.value?.blur(); // Удаляем фокус с поля ввода
 };
 
 // =========================================================
@@ -301,7 +323,7 @@ const closeMenu = () => {
 
 const citiesVisible = ref(false)
 const modalContentRef = ref(null)
-const cityName = ref(null);
+const cityName = ref(localStorage.getItem('cityName') || 'Москва'); // Инициализируем город, если он сохранен в localStorage
 
 
 const openCities = () => {
@@ -314,17 +336,31 @@ const closeCities = () => {
 };
 
 
-
-const changeCity = (event) => {
+const changeCity = async (event) => {
   const cityText = event.target.innerText;
   cityName.value = cityText;
   localStorage.setItem('cityName', cityText);
+  console.log(cityName.value);
+
+  slutStore.sluts = []
+  await slutStore.loadAnkets(cityName.value); 
+
 };
 
+
 const cityFuncs = (event) => {
-  changeCity(event);
+  changeCity(event);0
   closeCities();
+  router.push(`/`);
+  isMenuVisible.value = false
+
 }
+
+
+
+// Загружаем первые анкеты при монтировании компонента
+
+
 
 
 // =========================================================
@@ -421,13 +457,35 @@ const openTelegram = () => {
 // Модалка поддержки
 // =========================================================
 
+const isAnyModalOpen = ref(false);
+
 const isModalSuppVisible = ref(false)
 
 const openModalSupp = () => {
+  if ( isAnyModalOpen.value ) return   
+  isAnyModalOpen.value = true
   isModalSuppVisible.value = true;
 };
 const closeModalSupp = () => {
   isModalSuppVisible.value = false;
+  isAnyModalOpen.value = false
+};
+
+
+// =========================================================
+// Модалка Health+
+// =========================================================
+
+const isModalHealthVisible = ref(false)
+
+const openModalHealth = () => {
+  if ( isAnyModalOpen.value ) return   
+  isAnyModalOpen.value = true
+  isModalHealthVisible.value = true;
+};
+const closeModalHealth = () => {
+  isModalHealthVisible.value = false;
+  isAnyModalOpen.value = false
 };
 
 
@@ -435,13 +493,20 @@ const closeModalSupp = () => {
 // Модалка Вакансий
 // =========================================================
 
+
+
+
+
 const isModalVacancyVisible = ref(false)
 
 const openModalVacancy = () => {
+  if ( isAnyModalOpen.value ) return   
+  isAnyModalOpen.value = true
   isModalVacancyVisible.value = true;
 };
 const closeModalVacancy = () => {
   isModalVacancyVisible.value = false;
+  isAnyModalOpen.value = false
 };
 </script>
 
@@ -492,19 +557,8 @@ const closeModalVacancy = () => {
   margin: 0;
 }
 
-/* Для Firefox */
-.no-spinner[type='number'] {
-  -moz-appearance: textfield;
-}
-
-/* Для Internet Explorer */
-.no-spinner::-ms-clear {
-  display: none;
-}
-
-/* Для Edge */
-.no-spinner::-ms-reveal {
-  display: none;
+.isModalRegVisible{
+  
 }
 .support_modal{
   position: fixed;
@@ -513,15 +567,17 @@ const closeModalVacancy = () => {
   transform: translate(-50%, -50%);
   z-index: 1111;
   width: 700px;
+  height: 300px ;
 }
 
 .vacancy_modal{
   position: fixed;
-  top: 50%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1111;
   width: 700px;
+  height: 300px ;
 }
 
 .inputField {
@@ -553,11 +609,12 @@ const closeModalVacancy = () => {
   margin-top: -2px;
   right:87px;
   animation: expandWidth 0.5s ease-in-out forwards;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 @keyframes expandWidth {
   0% {
     width: 0;
+    
   }
   100% {
     width: 270px;
@@ -632,6 +689,8 @@ const closeModalVacancy = () => {
   .support_modal, .vacancy_modal{
     width: 300px;
     text-align: center;
+    height: 340px !important;
   }
+  
 }
 </style>
