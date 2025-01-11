@@ -58,6 +58,9 @@ const cityName = ref(localStorage.getItem('cityName') || 'Москва');
 
 
 onMounted(() => { 
+
+  slutStore.sluts = []
+
   if ( slutStore.sluts.length <= 1 ) {
     slutStore.loadAnkets(cityName.value.trim());
   }

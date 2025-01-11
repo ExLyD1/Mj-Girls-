@@ -4,16 +4,18 @@ import axios from 'axios'
 export const useSlutStore = defineStore( 'slutStore', {
     state: () => ({
         sluts: [],
+        searchedByInput: null,
         isLoading: false,
         id: null,
         modelId: null,
         statusMessage: '',
         isFetching: false,
-        frontendServerLink: 'http://localhost:3000',
+        frontendServerLink: 'https://majesticgirls.net',
         hasMoreAnkets: true,  // Есть ли еще анкеты для загрузки
         skip: 0,  // Количество уже загруженных анкет
         limit: 15,
         city: 'Москва',
+
     }),
     actions: {
         setId(id) {
@@ -27,6 +29,7 @@ export const useSlutStore = defineStore( 'slutStore', {
 
             try {
                 let response = await axios.get(`${this.frontendServerLink}/api/search?id=${this.id}`);
+                
 
                 this.modelId = response.data.data._id
                 const existingAnket = this.sluts.some(anket => anket._id === response.data.data._id);
@@ -36,13 +39,14 @@ export const useSlutStore = defineStore( 'slutStore', {
 
                 
             } catch (error) {
-                console.error(error);
+                console.error("Ошибка ил слат стора : ",error);
             } finally {
                 this.isLoading = false;
                 this.isFetching = false;
-                
+                // this.sluts.pop()
             }
         },
+
         async fetchSlutsByInput(id) {
             if (this.isFetching) return;
             this.isFetching = true;
@@ -83,7 +87,11 @@ export const useSlutStore = defineStore( 'slutStore', {
                 
                 // Добавляем анкеты в список, если их еще нет
                 newAnkets.forEach((anket) => {
-                    if (!this.sluts.some(existingAnket => existingAnket._id === anket._id)) {
+                    if (!this.sluts.some(existingAnket => 
+                        existingAnket.name === anket.name &&
+                        existingAnket.city === anket.city && 
+                        existingAnket.weight === anket.weight &&
+                        existingAnket.height === anket.height)) {
                         this.sluts.push(anket);
                     } 
                 });
@@ -110,9 +118,6 @@ export const useSlutStore = defineStore( 'slutStore', {
                 this.loading = false;
             }
         },
-
-
-
 
         async fetchUpload(file) {
             const formData = new FormData();

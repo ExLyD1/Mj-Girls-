@@ -7,9 +7,13 @@ const axios = require('axios');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const FormData = require('form-data');
-const backendServerLink = 'http://localhost'
+const backendServerLink = 'https://majesticgirls.net'
 // Включаем CORS
-app.use(cors());
+app.use(cors({
+  origin: '*', // Разрешает доступ с любого домена
+  methods: ['GET', 'POST', 'OPTIONS'], // Разрешённые методы
+  allowedHeaders: ['Content-Type', 'Authorization'], // Разрешённые заголовки
+}));
 app.use(express.json());
 
 
@@ -175,16 +179,18 @@ app.get('/api/search', async (req, res) => {
   try {
     // Получаем доступ к коллекции ankets
     const db = mongoose.connection.db;
-    const collection = db.collection('dankets');
+    const collection = db.collection('ankets');
 
     // Ищем анкету по _id
-    const result = await collection.findOne({ _id: parseInt(id) });
+    let result = await collection.findOne({ _id: parseInt(id) });
 
     // Если анкета не найдена
     if (!result) {
-      return res.status(404).json({ success: false, message: 'Анкета не найдена' });
+      const db = mongoose.connection.db;
+      const collection = db.collection('dankets');
+      result = await collection.findOne({ _id: parseInt(id) });
     }
-
+    
     // Если анкета найдена, но её статус 0
     if (result.status === 0) {
       return res.status(200).json({ success: false, message: 'Анкета не активна' });

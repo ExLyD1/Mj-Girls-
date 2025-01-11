@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col bg-myDark rounded-xl p-2 w-400 text-white gap-3 card">
+  <div class="flex flex-col bg-myDark rounded-xl p-2 w-400 text-white gap-4 card">
 
     <div class="flex flex-row justify-between w-full gap-3">
       <div class="text-2xl">
@@ -18,10 +18,10 @@
       </div>
       <div class="flex flex-col gap-3 h-full w-222">
         <div class="flex flex-row justify-between gap-3">
-          <div class="bg-myLightDark py-2 px-3 rounded-lg w-3/6 text-center">
+          <div class="bg-myLightDark py-2 px-3 rounded-lg w-3/6 text-sm text-center justify-center items-center flex">
             <slot name="city"></slot>
           </div>
-          <div class="bg-myRed py-2 px-3 rounded-lg w-3/6 text-center">VIP</div>
+          <div class="bg-myRed py-2 px-3 rounded-lg w-3/6 text-center justify-center items-center flex">VIP</div>
         </div>
         <div class="bg-myLightDark py-2 px-3 h-159 w-full flex flex-col rounded-lg">
           <div class="text-xl">Характеристики:</div>
@@ -37,7 +37,7 @@
 
 
 
-    <div class="flex flex-row justify-between gap-3 h-24 prices">
+    <div class="flex flex-row justify-between gap-3 h-24 prices py-2 items-center">
       <div class="flex flex-col justify-between gap-3 hour_price whitespace-nowrap">
         <div class="bg-myLightDark py-2 px-3 rounded-lg">1 час - <slot name="hour1Price"></slot></div>
         <div class="bg-myLightDark py-2 px-3 rounded-lg">2 часа - <slot name="hour2Price"></slot></div>
@@ -116,6 +116,7 @@ function goToProfile(id) {
   }
   .hour_price{
     flex-direction: row;
+    width:100%
   }
   .hour_price div{
     width:50% !important;
@@ -124,6 +125,11 @@ function goToProfile(id) {
   .night_price{
     width:100%;
   }
+  /* .prices{
+    display: block;
+    padding: 0px 8px;
+    align-items: center;
+  } */
 }
 @media screen and (max-width:380px) {
   .card{

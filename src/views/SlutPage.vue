@@ -362,6 +362,10 @@
 
   </div>
 
+
+  <div v-else>
+    <h1 class="text-3xl text-white text-center pb-96 px-5">Вы ввели не верный id модели</h1>
+  </div>
   <!-- ====================================================== -->
   <!-- ====================================================== -->
 
@@ -506,7 +510,6 @@
     </div>
 
   </div> 
-
 
 
   
@@ -737,9 +740,9 @@ const openTelegram = () => {
 
 onMounted(async () => {
   
-  slutStore.setId(route.params.id); 
+  await slutStore.setId(route.params.id); 
     
-  await slutStore.fetchSluts();
+  await slutStore.fetchSlutsByInput(slutStore.id);
   
 
 });

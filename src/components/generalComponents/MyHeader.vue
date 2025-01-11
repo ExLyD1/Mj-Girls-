@@ -2,18 +2,18 @@
   <header class="flex flex-row justify-between m-auto text-white py-14 w-1240 gap-5 z-0">
     
     <router-link to="/">
-      <img class="" src="@/assets/global/logo.png" alt="">
+      <img class="logo_adaptive" src="@/assets/global/logo.png" alt="">
     </router-link>
 
 
-
+    <!-- Инпут для пк не адаптив -->
     <div class="flex flex-col gap-2 rounded-xl header_input">
       <div class="bg-myDark rounded-xl flex flex-row items-center gap-4 py-3 px-4 h-12 input">
         <img src="@/assets/header/search.svg" alt="">
         <input 
         class="outline-none bg-myDark no-spinner w-full" 
         type="number"
-        placeholder="Search"
+        placeholder="Поис по номеру модели"
         v-model="searchQuery"
         @keydown.enter="foundModel" 
       >
@@ -31,7 +31,7 @@
     </div>
 
 
-
+    <!-- Выбрать город -->
     <div class="flex flex-col gap-2 header_options">
       <div class="flex flex-row items-center gap-5 font-medium">
       </div>
@@ -43,29 +43,35 @@
     </div>
 
 
+    <!-- Инпут для мобил адаптив -->
+    <div class="flex flex-row gap-4 relative ">
 
-    <div class="flex flex-row gap-4">
-      <div class="hidden bg-myLightDark cursor-pointer adapt_input">
-        <img @click="openSearch" src="@/assets/header/search.svg" alt="">
+      <div class="inputAdaptive hidden flex-row ">
+        
+        <img v-if="!isSearchVisible" @click.stop="openSearch" class="bg-myDark cursor-pointer px-3 rounded-xl" src="@/assets/header/search.svg" alt="">
+
+        <div v-else class="flex flex-row justify-between items-center bg-myDark text-white rounded-lg pr-2 absolute w-[200px] right-16">
+          <input 
+            class="w-full text-white outline-none rounded-lg p-2 bg-myDark no-spinner" 
+            type="number"
+            placeholder="Поис по номеру"
+            v-model="searchQuery"
+            @keydown.enter="foundModel" 
+          >
+          <img @click.stop="closeSearch" class="h-5 w-5" src="@/assets/header/close.svg" alt="">
+        </div>
+
       </div>
 
-      <div v-if="isMobileViewSearch & isSearchVisible" :class="{'activeSearch': isSearchVisible && isMobileViewSearch, 'inputField': true, }" class="flex justify-between">
-        <input 
-          ref="searchInput"
-          class="text-white no-spinner"
-          type="number" 
-          placeholder="Поиск по номеру"
-          v-model="searchQuery"
-          @keydown.enter="foundModel" 
-        >
-        <p class="mr-2" @click="closeSearch" v-if="isMobileViewSearch & isSearchVisible">✕</p>
-      </div>
 
       <div @click="openMenu" class="hidden bg-myDark cursor-pointer adapt_menu">
         <img src="@/assets/header/menu.png" alt="">
       </div>
-    </div>
 
+    </div>
+    
+
+    
   </header>
 
 
@@ -170,7 +176,7 @@
     </div>
 
     <div class="pt-6 text-center text-white text-lg">
-      Самые четкие без спида модели
+      Health+ - вид моделей которые проходят регулярные проверки на ИППП. В анкете присутствует "Зелёное" сердечко.
     </div>
 
     <a href="https://t.me/MajesticGirlsSupport_Bot" class="bg-myRed rounded-xl text-white flex items-center justify-center px-10 py-3 gap-4 w-52 mt-4 cursor-pointer">
@@ -267,7 +273,7 @@ const cities = ref([
 const isAuthored = ref(false)
 const isMenuVisible = ref(false)
 const isMobileView = ref( window.innerWidth <= 940 )
-const isSearchVisible = ref(true);
+const isSearchVisible = ref(false);
 const isMobileViewSearch = ref( window.innerWidth <= 660 )
 
 // =========================================================
@@ -279,29 +285,24 @@ const handleResize = () => {
   isMenuVisible.value = false;
   isMobileViewSearch.value = window.innerWidth <= 660;
 
-  if (isMobileViewSearch.value) {
-    isSearchVisible.value = false
-  } else {
-    isSearchVisible.value = true
-  }
+  // if (isMobileViewSearch.value) {
+  //   isSearchVisible.value = false
+  // } else {
+  //   isSearchVisible.value = true
+  // }
 }
 
 
 // =========================================================
 // Поиск
 // =========================================================
-const searchInput = ref(null);
 
 const openSearch = () => {
   isSearchVisible.value = true;
-  nextTick(() => {
-    searchInput.value?.focus();
-  });
 };
 
 const closeSearch = () => {
   isSearchVisible.value = false;
-  searchInput.value?.blur(); // Удаляем фокус с поля ввода
 };
 
 // =========================================================
@@ -340,7 +341,6 @@ const changeCity = async (event) => {
   const cityText = event.target.innerText;
   cityName.value = cityText;
   localStorage.setItem('cityName', cityText);
-  console.log(cityName.value);
 
   slutStore.sluts = []
   await slutStore.loadAnkets(cityName.value); 
@@ -557,9 +557,7 @@ const closeModalVacancy = () => {
   margin: 0;
 }
 
-.isModalRegVisible{
-  
-}
+
 .support_modal{
   position: fixed;
   top: 40%;
@@ -658,13 +656,6 @@ const closeModalVacancy = () => {
   }
 }
 @media screen and (max-width:660px) {
-  .adapt_input{
-    display: block;
-    height: 40px;
-    width: 40px;
-    border-radius: 10px;
-    padding: 11px;
-  }
   .header_input{
     display: none;
   }
@@ -673,6 +664,9 @@ const closeModalVacancy = () => {
   }
   .closeSearch{
     display: block;
+  }
+  .inputAdaptive{
+    display: flex;
   }
 }
 @media screen and (max-width:530px) {
@@ -692,5 +686,15 @@ const closeModalVacancy = () => {
     height: 340px !important;
   }
   
+}
+@media screen and (max-width:410px) {
+  .logo_adaptive{
+    width:180px
+  }
+}
+@media screen and (max-width:360px) {
+  .logo_adaptive{
+    width:160px
+  }
 }
 </style>
