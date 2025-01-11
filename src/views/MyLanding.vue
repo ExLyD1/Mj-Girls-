@@ -17,15 +17,19 @@
           
         >
           <template #name>{{ slut.name }}</template>
-          <template #isFavorite><img class="w-5 h-5" src="@/assets/landing/favorite_False.png" alt=""></template>
-          <template #img><img class="w-159 h-full rounded-lg" :src="slut.photo_links[0]" alt=""></template>
+          <template #isFavorite>
+            <img class="w-5 h-5" src="@/assets/landing/favorite_False.png" alt="">
+          </template>
+          <template #img>
+            <img class="w-full h-full object-cover rounded-lg"  :src="slut.photo_links[0]" alt="">
+          </template>
           <template #city>{{ slut.city }}</template>
           <template #age>{{ slut.age }}</template>
           <template #height>{{ slut.height }}</template>
           <template #weight>{{ slut.weight }}</template>
           <template #boobs>{{ slut.boobs }}</template>
           <template #hour1Price>{{ slut.hourPrices[0].price }} ₽</template>
-          <template #hour2Price>{{ slut.hourPrices[0].price }} ₽</template>
+          <template #hour2Price>{{ slut.hourPrices[0].price * 2 }} ₽</template>
           <template #nightPrice>{{ slut.hourPrices[1].price }} ₽</template>
         
         </slut-card>
@@ -53,22 +57,25 @@ import { useSlutStore } from '@/stores/SlutStore.js';
 
 const slutStore = useSlutStore();
 
-const cityName = ref(localStorage.getItem('cityName') || 'Москва');
 
 
 
 onMounted(() => { 
-
+  const city = localStorage.getItem('cityName') || 'Москва'
+  slutStore.city = city
   slutStore.sluts = []
-
+  console.log(slutStore.city);
+  
   if ( slutStore.sluts.length <= 1 ) {
-    slutStore.loadAnkets(cityName.value.trim());
+    slutStore.loadAnkets(slutStore.city.trim());
   }
 });
 
 
 const loadMore = () => {
-  slutStore.loadAnkets(cityName.value);
+  // console.log(cityName.value);
+  
+  slutStore.loadAnkets(slutStore.city);
 };
 
 

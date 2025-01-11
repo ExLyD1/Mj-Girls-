@@ -12,18 +12,18 @@
 
 
 
-    <div class="flex flex-row gap-3 w-full h-200">
-      <div>
+    <div class="flex flex-row gap-3 w-full items-center">
+      <div class="object-fill h-[210px] w-[159px] overflow-hidden">
         <slot name="img"></slot>
       </div>
-      <div class="flex flex-col gap-3 h-full w-222">
-        <div class="flex flex-row justify-between gap-3">
-          <div class="bg-myLightDark py-2 px-3 rounded-lg w-3/6 text-sm text-center justify-center items-center flex">
+      <div class="flex flex-col gap-2 h-full w-222">
+        <div class="flex flex-col justify-between gap-2 ">
+          <div class="bg-myLightDark py-1 px-3 rounded-lg text-sm text-center justify-center items-center flex w-full">
             <slot name="city"></slot>
           </div>
-          <div class="bg-myRed py-2 px-3 rounded-lg w-3/6 text-center justify-center items-center flex">VIP</div>
+          <div class="bg-myRed py-1 px-3 rounded-lg text-center justify-center items-center flex w-full">VIP</div>
         </div>
-        <div class="bg-myLightDark py-2 px-3 h-159 w-full flex flex-col rounded-lg">
+        <div class="bg-myLightDark py-2 px-3 w-full flex flex-col rounded-lg">
           <div class="text-xl">Характеристики:</div>
           <div class="flex flex-col">
             <div>Возраст: <slot name="age"></slot></div>
@@ -37,7 +37,7 @@
 
 
 
-    <div class="flex flex-row justify-between gap-3 h-24 prices py-2 items-center">
+    <div class="flex flex-row justify-between gap-3 h-24 prices items-center">
       <div class="flex flex-col justify-between gap-3 hour_price whitespace-nowrap">
         <div class="bg-myLightDark py-2 px-3 rounded-lg">1 час - <slot name="hour1Price"></slot></div>
         <div class="bg-myLightDark py-2 px-3 rounded-lg">2 часа - <slot name="hour2Price"></slot></div>

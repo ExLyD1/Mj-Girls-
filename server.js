@@ -9,16 +9,29 @@ const multer = require('multer');
 const FormData = require('form-data');
 const backendServerLink = 'https://majesticgirls.net'
 // Включаем CORS
-app.use(cors({
-  origin: '*', // Разрешает доступ с любого домена
-  methods: ['GET', 'POST', 'OPTIONS'], // Разрешённые методы
-  allowedHeaders: ['Content-Type', 'Authorization'], // Разрешённые заголовки
-}));
-app.use(express.json());
+  app.use(cors({
+    origin: '*', // Разрешает доступ с любого домена
+    methods: ['GET', 'POST', 'OPTIONS'], // Разрешённые методы
+    allowedHeaders: ['Content-Type', 'Authorization'], // Разрешённые заголовки
+  }));
+  app.use((req, res, next) => {
+    res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline';");
+    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("X-Frame-Options", "DENY");
+    res.setHeader("X-XSS-Protection", "1; mode=block");
+    next();
+  });
+  app.use(express.json());
 
+  const corsOptions = {
+    origin: 'http://example.com', // Разрешённый домен
+    methods: ['GET', 'POST'], // Разрешённые методы
+  };
 
-
-
+Object.keys(require.cache).forEach(function(key) {
+    delete require.cache[key];
+});
 
 const upload = multer({
   storage: multer.memoryStorage(), // Используем memoryStorage, чтобы хранить файл в памяти
@@ -92,7 +105,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
 
 // Пример API маршрута
-app.get('/api/message', (req, res) => {
+app.get('/api/message', cors(corsOptions), (req, res) => {
   res.json({ message: 'Привет от Express!' });
 });
 
@@ -152,7 +165,7 @@ const API_ENDPOINT = 'http://217.197.107.144:3000';
 
 
 // Маршрут для получения списка карт
-app.get('/api/cards', async (req, res) => {
+app.get('/api/cards', cors(corsOptions), async (req, res) => {
     try {
         // Запрос к внешнему API
         const response = await axios.get(`${API_ENDPOINT}/getcardslist`);
@@ -168,7 +181,7 @@ app.get('/api/cards', async (req, res) => {
 
 
 // Поиск пользователя по целочисленному ID
-app.get('/api/search', async (req, res) => {
+app.get('/api/search', cors(corsOptions), async (req, res) => {
   const { id } = req.query;
 
   // Проверка на целочисленный ID
@@ -216,7 +229,7 @@ app.get('/api/search', async (req, res) => {
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Поддержка маршрутов Vue.js (например, для SPA)
-app.get('*', (req, res) => {
+app.get('*', cors(corsOptions), (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 

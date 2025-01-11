@@ -11,12 +11,12 @@
       <div class="bg-myDark rounded-xl flex flex-row items-center gap-4 py-3 px-4 h-12 input">
         <img src="@/assets/header/search.svg" alt="">
         <input 
-        class="outline-none bg-myDark no-spinner w-full" 
-        type="number"
-        placeholder="Поис по номеру модели"
-        v-model="searchQuery"
-        @keydown.enter="foundModel" 
-      >
+          class="outline-none bg-myDark no-spinner w-full no-spinner" 
+          type="number"
+          placeholder="Поиск по номеру модели"
+          v-model="searchQuery"
+          @keydown.enter="foundModel" 
+        >
       </div>
 
       
@@ -52,12 +52,13 @@
 
         <div v-else class="flex flex-row justify-between items-center bg-myDark text-white rounded-lg pr-2 absolute w-[200px] right-16">
           <input 
-            class="w-full text-white outline-none rounded-lg p-2 bg-myDark no-spinner" 
+            class="w-full text-white outline-none rounded-lg p-2 bg-myDark " 
             type="number"
-            placeholder="Поис по номеру"
+            placeholder="Поиск по номеру"
             v-model="searchQuery"
-            @keydown.enter="foundModel" 
+            @keyup.enter="foundModel" 
           >
+            
           <img @click.stop="closeSearch" class="h-5 w-5" src="@/assets/header/close.svg" alt="">
         </div>
 
@@ -258,8 +259,8 @@ const foundModel = async () => {
 // Импорты
 
 const cities = ref([
-    "Москва", "Санкт-Петербург", "Новгород", "Новосибирск",
-    "Ростов на дону", "Сочи", 'Омск', "Екатеринбург", "Самара", "Барнаул",
+    "Москва", "Санкт-Петербург", "Нижний Новгород", "Новосибирск",
+    "Ростов-на-Дону", "Краснодар", "Сочи", 'Омск', "Екатеринбург", "Самара", "Барнаул",
     "Красноярск", "Владивосток", "Комсомольск-на-Амуре",
 ]);
 
@@ -342,8 +343,11 @@ const changeCity = async (event) => {
   cityName.value = cityText;
   localStorage.setItem('cityName', cityText);
 
+  slutStore.city = cityName.value
+  
   slutStore.sluts = []
   await slutStore.loadAnkets(cityName.value); 
+
 
 };
 
