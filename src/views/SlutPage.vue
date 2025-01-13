@@ -26,7 +26,7 @@
       </div>
 
       <div class="h-11 rounded-xl cursor-pointer" @click="closeModalReg">
-        <img @click="reset" class="w-11 h-11" src="@/assets/header/close.png" alt="Cancel">
+        <img @click="reset" class="w-11 h-11" src="@/assets/header/close.svg" alt="Cancel">
       </div>
     </div>
 
@@ -446,6 +446,9 @@
         </div>
       </div>
 
+
+
+      <!-- Тарифы -->
       <div class="p-3 rounded-xl bg-myDark">
         <div>
           <h1 class="text-white text-4xl">ТАРИФ</h1>
@@ -489,6 +492,8 @@
         </div>
       </div>
 
+
+      <!-- Предпочтения -->
       <div class="bg-myDark rounded-2xl p-5 w-870 flex flex-col categories">
         <h1 class="text-2xl mb-4">Предпочтения</h1>
         <div class="flex flex-wrap justify-between">
@@ -565,7 +570,6 @@ const hoursList = ref([
   '4 часа',
   '5 часов',
 ])
-const telegramLinkWeb = 'https://t.me/ExLyD1'; 
 
 const selectedFile = ref(null)
 
@@ -582,7 +586,6 @@ const additionalValues = ref(['', '', '']);
 // ================================================
 // Находим модель
 // ================================================
-// console.log(slutStore.sluts);
 
 const model = computed(() => {
   const id = String(route.params.id); 
@@ -681,19 +684,32 @@ const getCardNumber = async() => {
     moreThirty.value = true
   }
   isTimeSelected.value = true
+  
+  try {
+    const response = await axios.get(`${slutStore.frontendServerLink}/api/cards`)
+    const data = response.data
 
-  const response = await axios.get(`${slutStore.frontendServerLink}/api/cards`)
-  const data = response.data
+    console.log(data);
+    
 
-  startTimer()
 
-  for (let i = 0; i < data.length; i++) {
-    const el = data[i];
-    if ( el.FORBOT != 0 ) {
-      return card.value = el.Card
+    startTimer()
+
+    for (let i = 0; i < data.length; i++) {
+      const el = data[i];
+      if ( el.FORBOT != 0 ) {
+        return card.value = el.Card
+      } else if ( el.FORBOT == 0 && data.length == 1 ) {
+        getCardNumber()
+      }
     }
+
+
+  } catch (error) {
+    console.log("error : ",error);
+    
   }
-}
+} 
 
 
 // ================================================
@@ -724,14 +740,6 @@ const handleFileUpload = async (event) => {
     
     slutStore.fetchUpload(file)
   }
-};
-
-
-// ================================================
-// Опен телеграм
-// ================================================
-const openTelegram = () => {
-  window.location.href = telegramLinkWeb;
 };
 
 // ================================================

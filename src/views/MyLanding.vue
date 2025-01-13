@@ -3,9 +3,7 @@
     <my-PKH class="pkhComp"></my-PKH>
     <div class="container_landing text-white mt-5 w-full">
       <h1 class=" text-4xl flex justify-center">НАШИ МОДЕЛИ</h1>
-      
-    
-      
+
       <div 
         class="slut_wrapper flex flex-row justify-center flex-wrap mt-8 gap-5 mb-8"
         v-if="!slutStore.isLoading && slutStore.sluts.length > 0"
@@ -64,7 +62,6 @@ onMounted(() => {
   const city = localStorage.getItem('cityName') || 'Москва'
   slutStore.city = city
   slutStore.sluts = []
-  console.log(slutStore.city);
   
   if ( slutStore.sluts.length <= 1 ) {
     slutStore.loadAnkets(slutStore.city.trim());
@@ -73,8 +70,6 @@ onMounted(() => {
 
 
 const loadMore = () => {
-  // console.log(cityName.value);
-  
   slutStore.loadAnkets(slutStore.city);
 };
 

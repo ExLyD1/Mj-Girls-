@@ -8,26 +8,59 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const FormData = require('form-data');
 const backendServerLink = 'https://majesticgirls.net'
-// Включаем CORS
-  app.use(cors({
-    origin: '*', // Разрешает доступ с любого домена
-    methods: ['GET', 'POST', 'OPTIONS'], // Разрешённые методы
-    allowedHeaders: ['Content-Type', 'Authorization'], // Разрешённые заголовки
-  }));
-  app.use((req, res, next) => {
-    res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline';");
-    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
-    res.setHeader("X-Content-Type-Options", "nosniff");
-    res.setHeader("X-Frame-Options", "DENY");
-    res.setHeader("X-XSS-Protection", "1; mode=block");
-    next();
-  });
-  app.use(express.json());
 
-  const corsOptions = {
-    origin: 'http://example.com', // Разрешённый домен
-    methods: ['GET', 'POST'], // Разрешённые методы
-  };
+
+
+// Включаем CORS
+app.use(cors({
+  origin: (origin, callback) => {
+    const allowedOrigins = ['https://majesticgirls.net', 'https://t.me', 'https://localhost:8080', 'https://localhost:3000']; // Разрешённые домены
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", `
+    default-src 'self' https: data:;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https:;
+    connect-src 'self' https://api.telegram.org https://majesticgirls.net;
+    img-src 'self' data: https:;
+    style-src 'self' 'unsafe-inline';
+    font-src 'self' https:;
+  `.trim());
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  res.setHeader("X-XSS-Protection", "1; mode=block");
+  next();
+});
+
+
+app.use(express.json());
+
+app.use((err, req, res, next) => {
+  console.error('Ошибка сервера:', err.message);
+  res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+});
+
+
+
+const corsOptions = {
+  origin: 'http://localhost:8080', // Разрешённый домен
+  methods: ['GET', 'POST'], // Разрешённые методы
+};
+
+
+
+
+
 
 Object.keys(require.cache).forEach(function(key) {
     delete require.cache[key];

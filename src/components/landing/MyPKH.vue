@@ -35,13 +35,13 @@
       <p class="text-sm mb-4">
         К сожалению, доступ к основному сайту часто блокируется Роскомнадзором. Несмотря на блокировку, сайт продолжает работать. Будь в курсе всех событий, а так же подпишись на наш Телеграм-канал, чтобы участвовать в розыгрышах.
       </p>
-      <router-link 
-        to="/"
+      <a 
+        href="https://t.me/+PcI-DvFPG2thZWM6"
         class="inline-flex items-center px-8 py-2 bg-pink-600 text-white rounded-full shadow-md hover:bg-pink-700 mb-4 gap-4"
       >
         <img src="@/assets/footer/telegram.png" alt="Telegram Icon" class="w-6 h-6" />
         Telegram Канал
-      </router-link>
+      </a>
     </div>
 
     <!-- Фоновое изображение -->

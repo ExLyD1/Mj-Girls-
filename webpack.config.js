@@ -1,20 +1,26 @@
 const path = require('path');
+const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
-  entry: './src/main.js',  // Путь к вашему Vue файлу
+  entry: './src/main.ts', // Путь к твоему TypeScript файлу
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    static: path.join(__dirname, 'dist'),
     compress: true,
     port: 8080, // Порт для Vue
     proxy: {
       '/api': {
-        target: 'http://localhost:3000', // Прокси на Express сервер
+        target: 'https://majesticgirls.net', // Прокси на продакшен-сервер
         changeOrigin: true,
+        secure: false, // Если нужен HTTPS с самоподписанным сертификатом
       },
+    },
+
+    headers: {
+      'Access-Control-Allow-Origin': '*', // Для поддержки CORS
     },
   },
   module: {
@@ -22,6 +28,13 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
+      },
+      {
+        test: /\.ts$/,
+        loader: 'ts-loader',
+        options: {
+          appendTsSuffixTo: [/\.vue$/], // Для поддержки TypeScript в .vue
+        },
       },
       {
         test: /\.js$/,
@@ -38,8 +51,11 @@ module.exports = {
   },
   resolve: {
     alias: {
-      vue$: 'vue/dist/vue.esm.js',
+      vue$: 'vue/dist/vue.esm-bundler.js', // Для Vue 3
     },
-    extensions: ['*', '.js', '.vue', '.json'],
+    extensions: ['.ts', '.js', '.vue', '.json'],
   },
+  plugins: [
+    new VueLoaderPlugin(), // Подключаем плагин для vue-loader
+  ],
 };
